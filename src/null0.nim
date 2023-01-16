@@ -1,16 +1,9 @@
+import unittest
 import wasm3
+import wasm3/wasm3c
 
-let env = loadWasmEnv(readFile("null0.wasm"))
+proc null0_log(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
+  proc null0_log_inside(message: string) = echo(message)
+  callWasm(null0_log_inside, sp, mem)
 
-proc null0_log(message: string) =
-  echo message, "\n"
-
-m3_LinkRawFunction(env, "*", "null0_log", "i(i)", null0_log)
-
-# let addFunc = env.findFunction("add")
-# let multiplyFunc = env.findFunction("multiply")
-# check addFunc.call(int32, 3, 4) == 7
-# check multiplyFunc.call(int32, 3, 4) == 12
-
-
-
+let env = loadWasmEnv(readFile("example.wasm"), hostProcs = [wasmHostProc("*", "null0_log", "i(i)", null0_log)])
