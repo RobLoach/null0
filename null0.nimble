@@ -2,7 +2,7 @@ description   = "Libretro core for null0 game-engine"
 version       = "0.0.1"
 author        = "David Konsumer"
 license       = "MIT"
-srcDir        = "src"
+srcDir        = "host"
 bin           = @["null0"]
 
 requires "nim >= 1.6.10"
