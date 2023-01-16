@@ -7,8 +7,8 @@ type
     name*:string
     version*:string
 
-# entrypoint to your game
-proc config():Config {.wasmexport.} =
+# tell engine about your game
+proc conf():Config {.wasmexport.} =
   return Config(
     name : "mygame",
     version : "0.0.0",
@@ -22,6 +22,6 @@ proc init() {.wasmexport.} =
 proc update(dt: int32) {.wasmexport.} =
   discard
 
-# update scrnee
+# update screen
 proc draw() {.wasmexport.} =
   discard
