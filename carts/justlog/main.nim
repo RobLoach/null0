@@ -1,10 +1,9 @@
 import wasm3/exporter
 
-proc log(s: cstring){.importc.}
+proc null0_log(s: cstring){.importc.}
 
 proc load*() {.wasmexport.} =
-  log("Hello World")
-
-proc unload*() {.wasmexport.} =
-  log("ok, bye.")
-
+  null0_log("Hello")
+  null0_log("World")
+  var a = "This is a test"
+  null0_log a.cstring

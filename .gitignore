@@ -2,3 +2,4 @@
 /null0
 *.null0
 *.wasm
+tests/test1

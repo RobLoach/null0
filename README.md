@@ -7,6 +7,9 @@ nimble install -d
 # build null0 runtime
 nimble build
 
-# build example cart
-nimble justlog
+# build example carts
+nimble carts
+
+# run unit-tests to play with ideas
+nimble test
 ```
