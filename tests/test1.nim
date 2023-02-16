@@ -1,8 +1,22 @@
 import unittest
 import wasm3
 import wasm3/wasm3c
+import ../src/null0_lib
 
-suite "Raw C wrapping":
+suite "Cart Utils":
+  test "isZip":
+    let w = readFile("justlog.wasm")
+    let z = readFile("justlog.null0")
+    check isZip(z)
+    check isZip(w) != true
+  
+  test "isWasm":
+    let w = readFile("justlog.wasm")
+    let z = readFile("justlog.null0")
+    check isWasm(w)
+    check isWasm(z) != true
+
+suite "Raw C wrapping (justlog)":
   test "Setup log hook function and call it":
     proc logProc(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
       var sp = sp.stackPtrToUint()
