@@ -1,7 +1,12 @@
+Eventually, this will have a native host and a libretro core.
 
+```sh
+# install tools/libs
+nimble install -d
 
-```
-nimble clean                Clean built files
-nimble wasm                 Build wasm cart
-nimble run -- example.wasm  Run the CLI
+# build null0 runtime
+nimble build
+
+# build example cart
+nimble justlog
 ```

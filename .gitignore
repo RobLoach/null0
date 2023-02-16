@@ -1,3 +1,4 @@
-*.wasm
 .DS_Store
-null0
+/null0
+*.null0
+*.wasm
