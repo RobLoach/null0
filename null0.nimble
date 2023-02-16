@@ -26,9 +26,6 @@ task libretro, "Build libretro host":
     selfExec("c --app:lib --out:null0-libretro.so -d:release src/null0_libretro.nim")
 
 task carts, "Builds all demo carts":
-  for file in listDirs("carts"):
-    selfExec("c " & file & "/main.nim")
-    echo file
-    let (dir, name, ext) = os.splitFile(file)
-    exec("zip " & name & ".null0 -r main.wasm")
-    exec("mv main.wasm " & name & ".wasm")
+  for dir in listDirs("carts"):
+    let (parent, name, ext) = os.splitFile(dir)
+    exec("cd " & dir & " && nim c main.nim && zip ../../" & name & ".null0 -r main.wasm assets/ && mv main.wasm ../../" & name & ".wasm")
