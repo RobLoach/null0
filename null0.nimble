@@ -16,15 +16,7 @@ task clean, "Clean built files":
 
 task libretro, "Build libretro host":
   selfExec("c --threads:on --app:staticlib --out:null0-libretro.a -d:release libretro/null0_libretro.nim")
-  if defined(osx):
-    echo "Building libretro core for OSX"
-    exec("gcc null0-libretro.a libretro/libretro.c -o null0-libretro.dylib -lphysfs")
-  if defined(windows):
-    echo "Building libretro core for Windows"
-    exec("gcc null0-libretro.a libretro/libretro.c -o null0-libretro.dll -lphysfs")
-  if defined(linux):
-    echo "Building libretro core for Linux"
-    exec("gcc null0-libretro.a libretro/libretro.c -o null0-libretro.so -lphysfs")
+  exec("gcc null0-libretro.a libretro/libretro.c -o null0-libretro.dylib -lphysfs")
 
 
 task carts, "Builds all demo carts":

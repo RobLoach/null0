@@ -7,8 +7,10 @@
 
 #include "libretro.h"
 
-bool null0_libretro_main(char* filename, char* data, int size);
-bool null0_test(char* message);
+void null0_test1();
+int null0_test2();
+int null0_test3(int input);
+int null0_test4(char* message);
 
 static uint32_t* frame_buf;
 static struct retro_log_callback logging;
@@ -44,7 +46,8 @@ void retro_get_system_info(struct retro_system_info* info) {
   info->library_name = "TestCore";
   info->library_version = "v1";
   info->need_fullpath = false;
-  info->valid_extensions = "null0|zip|wasm";  // Anything is fine, we don't care.
+  info->valid_extensions =
+      "null0|zip|wasm";  // Anything is fine, we don't care.
 }
 
 static retro_video_refresh_t video_cb;
@@ -131,7 +134,8 @@ static void video_callback(void) {
   fb.width = 320;
   fb.height = 240;
   fb.access_flags = RETRO_MEMORY_ACCESS_WRITE;
-  if (environ_cb(RETRO_ENVIRONMENT_GET_CURRENT_SOFTWARE_FRAMEBUFFER, &fb) && fb.format == RETRO_PIXEL_FORMAT_XRGB8888) {
+  if (environ_cb(RETRO_ENVIRONMENT_GET_CURRENT_SOFTWARE_FRAMEBUFFER, &fb) &&
+      fb.format == RETRO_PIXEL_FORMAT_XRGB8888) {
     buf = fb.data;
     stride = fb.pitch >> 2;
   } else {
@@ -160,8 +164,7 @@ static void video_callback(void) {
   video_cb(buf, 320, 240, stride << 2);
 }
 
-static void check_variables(void) {
-}
+static void check_variables(void) {}
 
 static void audio_callback(void) {
   audio_cb(0, 0);
@@ -187,25 +190,24 @@ bool retro_load_game(const struct retro_game_info* info) {
 
   check_variables();
 
-  printf("%s: %lu %zu\n", info->path, sizeof(info->data), info->size);
-
-  null0_test("TESTING");
-
-  // char* data = malloc(info->size);
-  // bool success = null0_libretro_main(info->path, data, info->size);
+  // null0_test1();
+  // int a = null0_test2();
+  // int b = null0_test3(3);
+  // int c = null0_test4("tester");
 
   (void)info;
   return true;
 }
 
-void retro_unload_game(void) {
-}
+void retro_unload_game(void) {}
 
 unsigned retro_get_region(void) {
   return RETRO_REGION_NTSC;
 }
 
-bool retro_load_game_special(unsigned type, const struct retro_game_info* info, size_t num) {
+bool retro_load_game_special(unsigned type,
+                             const struct retro_game_info* info,
+                             size_t num) {
   if (type != 0x200) {
     return false;
   }
