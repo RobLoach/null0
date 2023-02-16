@@ -15,11 +15,14 @@ task clean, "Clean built files":
   exec("rm -f *.wasm *.null0 null0 tests/test1 null0-libretro.*")
 
 task libretro, "Build libretro host":
-  when defined(osx):
+  if defined(osx):
+    echo "Building libretro core for OSX"
     selfExec("c --app:lib --out:null0-libretro.dylib -d:release src/null0_libretro.nim")
-  when defined(windows):
+  if defined(windows):
+    echo "Building libretro core for Windows"
     selfExec("c --app:lib --out:null0-libretro.dll -d:release src/null0_libretro.nim")
-  when defined(linux):
+  if defined(linux):
+    echo "Building libretro core for Linux"
     selfExec("c --app:lib --out:null0-libretro.so -d:release src/null0_libretro.nim")
 
 task carts, "Builds all demo carts":

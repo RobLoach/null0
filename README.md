@@ -4,7 +4,7 @@ Eventually, this will have a native host and a libretro core.
 # install tools/libs
 nimble install -d
 
-# build null0 runtime
+# build null0 standalone runtime
 nimble build
 
 # build null0 libretro core
