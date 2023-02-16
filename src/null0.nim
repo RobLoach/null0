@@ -1,4 +1,4 @@
-import  docopt
+import docopt
 from os import dirExists, fileExists
 import physfs
 import wasm3

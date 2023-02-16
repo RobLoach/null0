@@ -12,10 +12,15 @@ requires "docopt >= 0.7.0"
 import std/os
 
 task clean, "Clean built files":
-  exec("rm -f *.wasm *.null0 null0 tests/test1")
+  exec("rm -f *.wasm *.null0 null0 tests/test1 null0-libretro.*")
 
 task libretro, "Build libretro host":
-  selfExec("c --app:lib -d:release src/null0-libretro.nim")
+  when defined(osx):
+    selfExec("c --app:lib --out:null0-libretro.dylib -d:release src/null0_libretro.nim")
+  when defined(windows):
+    selfExec("c --app:lib --out:null0-libretro.dll -d:release src/null0_libretro.nim")
+  when defined(linux):
+    selfExec("c --app:lib --out:null0-libretro.so -d:release src/null0_libretro.nim")
 
 task carts, "Builds all demo carts":
   for file in listDirs("carts"):

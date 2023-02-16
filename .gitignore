@@ -3,3 +3,6 @@
 *.null0
 *.wasm
 tests/test1
+*.so
+*.dylib
+*.dll
