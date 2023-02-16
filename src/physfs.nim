@@ -6,7 +6,7 @@
 import std/options
 
 when defined(macosx):
-  {.passL: "-L/opt/homebrew/Cellar/physfs/3.2.0/lib -lphysfs".}
+  {.passL: "-lphysfs".}
 when defined(linux):
   {.passL: "-lphysfs".}
 

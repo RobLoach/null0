@@ -6,3 +6,4 @@ tests/test1
 *.so
 *.dylib
 *.dll
+*.a
