@@ -7,6 +7,9 @@ import std/options
 
 when defined(macosx):
   {.passL: "-L/opt/homebrew/Cellar/physfs/3.2.0/lib -lphysfs".}
+when defined(linux):
+  {.passL: "-L/usr/lib/aarch64-linux-gnu/ -lphysfs".}
+
 
 type 
   PHYSFS_File* {.pure, final.} = object 
