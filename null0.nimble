@@ -18,7 +18,6 @@ task clean, "Clean built files":
 task libretro, "Build libretro host":
   selfExec("c --threads:on --app:lib --out:null0-libretro.dylib -d:release libretro/null0_libretro.nim")
 
-
 task carts, "Builds all demo carts":
   for dir in listDirs("carts"):
     let (parent, name, ext) = os.splitFile(dir)

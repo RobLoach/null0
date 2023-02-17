@@ -72,29 +72,26 @@ proc retro_get_system_av_info*(info: ptr RetroSystemAvInfo) {.stdcall,exportc,dy
   info.geometry.max_height = 240
   info.geometry.aspect_ratio = 4 / 3
 
+# TODO: these currently segfault
+
 proc retro_set_environment*(cb: cbset_environment_t) {.stdcall,exportc,dynlib.} =
-  # set_environment = cb
-  discard
+  set_environment = cb
 
 proc retro_set_audio_sample*(cb: cbaudio_t) {.stdcall,exportc,dynlib.} =
-  # cb_audio = cb
-  discard
+  cb_audio = cb
 
 proc retro_set_audio_sample_batch*(cb: cbaudio_batch_t) {.stdcall,exportc,dynlib.} =
   cb_audio_batch = cb
-  discard
 
 proc retro_set_input_poll*(cb: cbinput_poll_t) {.stdcall,exportc,dynlib.} =
-  # input_poll = cb
-  discard
+  input_poll = cb
 
 proc retro_set_input_state*(cb: cbset_input_t) {.stdcall,exportc,dynlib.} =
-  # set_input = cb
-  discard
+  set_input = cb
 
 proc retro_set_video_refresh*(cb: cbvideo_t) {.stdcall,exportc,dynlib.} =
-  # cb_video = cb
-  discard
+  cb_video = cb
+
 
 proc retro_reset*() {.stdcall,exportc,dynlib.} =
   echo "retro_reset"
