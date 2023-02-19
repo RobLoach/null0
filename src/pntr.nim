@@ -1,6 +1,14 @@
 {.emit: """
 #define PNTR_PIXELFORMAT_RGBA
 #define PNTR_IMPLEMENTATION
+#define PNTR_SUPPORT_DEFAULT_FONT
+#define PNTR_SUPPORT_TTF
+
+/*
+PNTR_LOAD_FILE macro should match, for easier physfs
+unsigned char* pntr_load_file(const char *fileName, unsigned int *bytesRead);
+*/
+
 #include "../vendor/pntr/pntr.h"
 """.}
 
