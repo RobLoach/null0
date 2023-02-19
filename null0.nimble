@@ -9,6 +9,7 @@ requires "nim >= 1.6.10"
 requires "https://github.com/beef331/wasm3 >= 0.1.7"
 requires "docopt >= 0.7.0"
 requires "https://github.com/treeform/print.git >= 1.0.2"
+requires "https://github.com/notnullgames/pntr-nim.git"
 
 import std/os
 

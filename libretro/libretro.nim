@@ -318,10 +318,10 @@ type
   retro_video_refresh_t* = proc(data:seq[cuint], width:cuint, height:cuint, pitch:csize_t):void {.cdecl.}
 
   # typedef void(RETRO_CALLCONV* retro_audio_sample_t)(int16_t left, int16_t right);
-  retro_audio_sample_t* = proc(left:int16, right:int16):void {.cdecl.}
+  retro_audio_sample_t* = proc(left:seq[int16], right:seq[int16]):void {.cdecl.}
 
   # typedef size_t(RETRO_CALLCONV* retro_audio_sample_batch_t)(const int16_t* data, size_t frames);
-  retro_audio_sample_batch_t* = proc(data:seq[int16], frames:csize_t):csize_t {.cdecl.} # 48000/60
+  retro_audio_sample_batch_t* = proc(data:seq[int16], frames:csize_t):csize_t {.cdecl.}
 
   # typedef void(RETRO_CALLCONV* retro_input_poll_t)(void);
   retro_input_poll_t* = proc():void {.cdecl.}

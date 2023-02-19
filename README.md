@@ -30,3 +30,8 @@ nimble carts
 # run unit-tests to play with ideas
 nimble test
 ```
+
+## notes
+
+- [pntr](https://github.com/notnullgames/pntr-nim)
+- [soloud](https://gist.github.com/zacharycarter/846869eb3423e20af04dea226b65c18f#soloud)

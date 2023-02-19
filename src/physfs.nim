@@ -5,6 +5,7 @@
 
 import std/options
 
+# TODO: look into not having to have physfs installed globally (see pntr wrapper)
 when defined(macosx):
   {.passL: "-lphysfs".}
 when defined(linux):
