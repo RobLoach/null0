@@ -19,10 +19,6 @@ proc NimMain() {.cdecl, importc.}
 
 var null0_screen:pntr_image
 
-# colors used for checkerboard
-const color_r:uint32 = 0xff shl 16
-const color_g:uint32 = 0xff shl 8
-
 proc log_cb(level: retro_log_level, message: string) =
   if level == RETRO_LOG_DEBUG:
     stdout.styledWriteLine(fgBlue, "DEBUG: ", fgDefault, message)
@@ -92,15 +88,7 @@ proc retro_reset*() {.cdecl,exportc,dynlib.} =
   log_cb(RETRO_LOG_DEBUG, "retro_reset() called.")
 
 proc retro_run*() {.cdecl,exportc,dynlib.} =
-  for y in 0 ..< HEIGHT:
-    let index_y = uint32 bitand((y shr 4), 1)
-    for x in 0 ..< WIDTH:
-      let b = ((y * WIDTH) + x)
-      let index_x = uint32 bitand((x shr 4), 1)
-      if bool bitxor(index_y, index_x):
-        null0_screen.data[b] = color_r
-      else:
-        null0_screen.data[b] = color_g
+  clear_background*(null0_screen, BLACK)
   video_cb(null0_screen.data, WIDTH, HEIGHT, (WIDTH shl 2))
 
 proc retro_load_game*(info: ptr retro_game_info): bool {.cdecl,exportc,dynlib.} =
