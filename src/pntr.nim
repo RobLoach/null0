@@ -1,6 +1,6 @@
 {.emit: """
 #define PNTR_IMPLEMENTATION
-#define PNTR_PIXELFORMAT_RGBA
+#define PNTR_PIXELFORMAT_ARGB
 #define PNTR_SUPPORT_DEFAULT_FONT
 #define PNTR_SUPPORT_TTF
 
@@ -22,10 +22,11 @@ type
     pitch*: cint
 
   pntr_color* {.bycopy.} = object
-    r*: uint8
-    g*: uint8
     b*: uint8
+    g*: uint8
+    r*: uint8
     a*: uint8
+    
 
   pntr_vector* {.bycopy.} = object
     x*: cint

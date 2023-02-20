@@ -17,7 +17,7 @@ var input_state_cb: retro_input_state_t
 
 proc NimMain() {.cdecl, importc.}
 
-var null0_screen:pntr_image
+var null0_screen:ptr pntr_image
 
 proc log_cb(level: retro_log_level, message: string) =
   if level == RETRO_LOG_DEBUG:
@@ -51,10 +51,7 @@ proc retro_set_input_state*(cb: retro_input_state_t) {.cdecl,exportc,dynlib.} =
 
 proc retro_init*() {.cdecl,exportc,dynlib.} =
   NimMain()
-  null0_screen.height = HEIGHT
-  null0_screen.width = WIDTH
-  var bufPtr0 = alloc0(sizeof(cuint) * WIDTH * HEIGHT)
-  null0_screen.data = cast[ptr UncheckedArray[cuint]](bufPtr0)
+  null0_screen = new_image(WIDTH, HEIGHT)
   log_cb(RETRO_LOG_DEBUG, "retro_init() called.")
 
 proc retro_deinit*() {.cdecl,exportc,dynlib.} =
@@ -88,8 +85,12 @@ proc retro_reset*() {.cdecl,exportc,dynlib.} =
   log_cb(RETRO_LOG_DEBUG, "retro_reset() called.")
 
 proc retro_run*() {.cdecl,exportc,dynlib.} =
-  clear_background*(null0_screen, BLACK)
-  video_cb(null0_screen.data, WIDTH, HEIGHT, (WIDTH shl 2))
+  clear_background(null0_screen, BLACK)
+  draw_circle(null0_screen, 160, 120, 100, YELLOW)
+  draw_circle(null0_screen, 120, 100, 20, BLACK)
+  draw_circle(null0_screen, 200, 100, 20, BLACK)
+  draw_rectangle(null0_screen, 110, 150, 100, 20, BLACK)
+  video_cb(null0_screen[].data, WIDTH, HEIGHT, (WIDTH shl 2))
 
 proc retro_load_game*(info: ptr retro_game_info): bool {.cdecl,exportc,dynlib.} =
   var fmt = RETRO_PIXEL_FORMAT_XRGB8888
