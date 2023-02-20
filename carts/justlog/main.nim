@@ -1,12 +1,10 @@
-import wasm3/exporter
-
-proc null0_log(s: cstring){.importc.}
+import ../null0
 
 proc load*() {.wasmexport.} =
-  null0_log("Hello from justlog.")
+  log("Hello from justlog.")
 
 proc update*() {.wasmexport.} =
   discard
 
 proc unload*() {.wasmexport.} =
-  null0_log("Ok, bye.")
+  log("Ok, bye.")

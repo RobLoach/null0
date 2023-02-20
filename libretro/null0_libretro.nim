@@ -2,6 +2,7 @@ import bitops
 import std/terminal
 import libretro
 import ../src/pntr
+import ../src/null0_lib
 
 const WIDTH = 320
 const HEIGHT = 240 
@@ -51,12 +52,8 @@ proc retro_set_input_state*(cb: retro_input_state_t) {.cdecl,exportc,dynlib.} =
 
 proc retro_init*() {.cdecl,exportc,dynlib.} =
   NimMain()
-  null0_screen = new_image(WIDTH, HEIGHT)
-  log_cb(RETRO_LOG_DEBUG, "retro_init() called.")
 
 proc retro_deinit*() {.cdecl,exportc,dynlib.} =
-  log_cb(RETRO_LOG_DEBUG, "retro_deinit() called.")
-  unload_image(null0_screen)
   GC_FullCollect()
 
 proc retro_api_version*(): cuint {.cdecl,exportc,dynlib.} =
@@ -85,22 +82,19 @@ proc retro_reset*() {.cdecl,exportc,dynlib.} =
   log_cb(RETRO_LOG_DEBUG, "retro_reset() called.")
 
 proc retro_run*() {.cdecl,exportc,dynlib.} =
-  clear_background(null0_screen, BLACK)
-  draw_circle(null0_screen, 160, 120, 100, YELLOW)
-  draw_circle(null0_screen, 120, 100, 20, BLACK)
-  draw_circle(null0_screen, 200, 100, 20, BLACK)
-  draw_rectangle(null0_screen, 110, 150, 100, 20, BLACK)
-  video_cb(null0_screen[].data, WIDTH, HEIGHT, (WIDTH shl 2))
+  cartUpdate()
+  video_cb(null0_canvas[].data, WIDTH, HEIGHT, (WIDTH shl 2))
 
 proc retro_load_game*(info: ptr retro_game_info): bool {.cdecl,exportc,dynlib.} =
   var fmt = RETRO_PIXEL_FORMAT_XRGB8888
   if not environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, addr fmt):
     log_cb(RETRO_LOG_INFO, "XRGB8888 is not supported.")
     return false
+  cartLoad($info.path)
   return true
 
 proc retro_unload_game*() {.cdecl,exportc,dynlib.} =
-  log_cb(RETRO_LOG_DEBUG, "retro_unload_game() called.")
+  cartUnload()
 
 proc retro_get_region*(): cuint {.cdecl,exportc,dynlib.} =
   return 0 # NTSC

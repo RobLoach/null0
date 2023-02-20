@@ -11,10 +11,14 @@ requires "docopt >= 0.7.0"
 requires "https://github.com/treeform/print.git >= 1.0.2"
 requires "https://github.com/notnullgames/pntr-nim.git"
 
-import std/os
+import os
 
 task clean, "Clean built files":
-  exec("rm -f *.wasm *.null0 null0 tests/test1 null0-libretro.*")
+  for file in listFiles("."):
+    let s = splitFile(file)
+    if file == "./null0" or s.ext == ".dll" or s.ext == ".so" or s.ext == ".dylib" or s.ext == ".wasm" or s.ext == ".null0":
+      echo "Deleting ", file
+      rmFile(file)
 
 task libretro, "Build libretro host":
   selfExec("c -d:release --app:lib --noMain --gc:orc --outDir=. libretro/null0_libretro.nim")

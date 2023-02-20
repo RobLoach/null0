@@ -28,6 +28,7 @@ proc main() =
     echo "Could not init filesystem."
     return
   cartLoad(filename)
+  cartUnload()
 
 when isMainModule:
   main()

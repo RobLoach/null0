@@ -1,14 +1,14 @@
-import wasm3/exporter
-
-proc null0_log(s: cstring){.importc.}
-proc clear_screen(dest: uint8, color: int32){.importc.}
-const BLACK = int32 0x000000FF
+import ../null0
 
 proc load*() {.wasmexport.} =
-  null0_log("Hello from graphics.")
+  log("Hello from graphics.")
 
 proc update*() {.wasmexport.} =
-  clear_screen(0, BLACK)
+  clear_background(BLACK)
+  draw_circle(160, 120, 100, RED)
+  draw_circle(120, 100, 20, BLACK)
+  draw_circle(200, 100, 20, BLACK)
+  draw_rectangle(110, 150, 100, 20, BLACK)
 
 proc unload*() {.wasmexport.} =
-  null0_log("Ok, bye.")
+  log("Ok, bye.")
