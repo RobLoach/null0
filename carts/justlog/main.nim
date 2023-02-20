@@ -1,10 +1,10 @@
 import ../null0
 
-proc load*() {.wasmexport.} =
+proc load*() {.null0.} =
   log("Hello from justlog.")
 
-proc update*() {.wasmexport.} =
+proc update*() {.null0.} =
   discard
 
-proc unload*() {.wasmexport.} =
+proc unload*() {.null0.} =
   log("Ok, bye.")
