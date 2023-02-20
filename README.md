@@ -21,14 +21,20 @@ nimble install -d
 # build null0 standalone runtime
 nimble build
 
-# build null0 libretro core
-nimble libretro
-
 # build example carts
 nimble carts
 
 # run unit-tests to play with ideas
 nimble test
+
+# build null0 libretro core
+nimble libretro
+
+# mac: run libretro core
+/Applications/RetroArch.app/Contents/MacOS/RetroArch -L libnull0_libretro.dylib justlog.null0
+
+# linux/windows: run libretro core
+retroarch -L libnull0_libretro.dylib justlog.null0
 ```
 
 ## notes

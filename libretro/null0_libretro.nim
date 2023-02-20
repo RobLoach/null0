@@ -1,7 +1,6 @@
 import bitops
 import std/terminal
 import libretro
-import ../src/null0_lib
 
 const WIDTH = 320
 const HEIGHT = 240 
@@ -14,6 +13,11 @@ var audio_batch_cb: retro_audio_sample_batch_t
 var input_poll_cb: retro_input_poll_t
 var environ_cb: retro_environment_t
 var input_state_cb: retro_input_state_t
+
+proc NimMain() {.cdecl, importc.}
+
+# video framebuffer
+var buf:ptr UncheckedArray[cuint]
 
 # colors used for checkerboard
 const color_r:uint32 = 0xff shl 16
@@ -50,10 +54,15 @@ proc retro_set_input_state*(cb: retro_input_state_t) {.cdecl,exportc,dynlib.} =
   input_state_cb = cb
 
 proc retro_init*() {.cdecl,exportc,dynlib.} =
-  discard
+  NimMain() 
+  var bufPtr0 = alloc0(sizeof(cuint) * WIDTH * HEIGHT)
+  buf = cast[ptr UncheckedArray[cuint]](bufPtr0)
+  log_cb(RETRO_LOG_DEBUG, "retro_init() called.")
 
 proc retro_deinit*() {.cdecl,exportc,dynlib.} =
-  discard
+  log_cb(RETRO_LOG_DEBUG, "retro_deinit() called.")
+  dealloc(buf)
+  GC_FullCollect()
 
 proc retro_api_version*(): cuint {.cdecl,exportc,dynlib.} =
   return RETRO_API_VERSION
@@ -63,10 +72,10 @@ proc retro_set_controller_port_device*(port: cuint; device: cuint) {.cdecl,expor
   echo port, device
 
 proc retro_get_system_info*(info: ptr retro_system_info) {.cdecl,exportc,dynlib.} =
-  info.library_name = "null0";
+  info.library_name = "nim_example";
   info.library_version = "v1"
   info.need_fullpath = false
-  info.valid_extensions = "null0|wasm|zip" # we don't use any ROMs
+  info.valid_extensions = nil # we don't use any ROMs
 
 proc retro_get_system_av_info*(info: ptr retro_system_av_info) {.cdecl,exportc,dynlib.} =
   info.timing.fps = FPS
@@ -81,19 +90,26 @@ proc retro_reset*() {.cdecl,exportc,dynlib.} =
   log_cb(RETRO_LOG_DEBUG, "retro_reset() called.")
 
 proc retro_run*() {.cdecl,exportc,dynlib.} =
-  cartUpdate()
-  video_cb(null0_canvas.data, WIDTH, HEIGHT, (WIDTH shl 2))
+  for y in 0 ..< HEIGHT:
+    let index_y = uint32 bitand((y shr 4), 1)
+    for x in 0 ..< WIDTH:
+      let b = ((y * WIDTH) + x)
+      let index_x = uint32 bitand((x shr 4), 1)
+      if bool bitxor(index_y, index_x):
+        buf[b] = color_r
+      else:
+        buf[b] = color_g
+  video_cb(buf, WIDTH, HEIGHT, (WIDTH shl 2))
 
 proc retro_load_game*(info: ptr retro_game_info): bool {.cdecl,exportc,dynlib.} =
   var fmt = RETRO_PIXEL_FORMAT_XRGB8888
   if not environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, addr fmt):
     log_cb(RETRO_LOG_INFO, "XRGB8888 is not supported.")
     return false
-  cartLoad($info.path)
   return true
 
 proc retro_unload_game*() {.cdecl,exportc,dynlib.} =
-  cartUnload()
+  log_cb(RETRO_LOG_DEBUG, "retro_unload_game() called.")
 
 proc retro_get_region*(): cuint {.cdecl,exportc,dynlib.} =
   return 0 # NTSC

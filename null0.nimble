@@ -17,7 +17,7 @@ task clean, "Clean built files":
   exec("rm -f *.wasm *.null0 null0 tests/test1 null0-libretro.*")
 
 task libretro, "Build libretro host":
-  selfExec("c --threads:on --app:lib --out:null0-libretro.dylib -d:debug libretro/null0_libretro.nim")
+  selfExec("c -d:release --app:lib --noMain --gc:orc --outDir=. libretro/null0_libretro.nim")
 
 task carts, "Builds all demo carts":
   for dir in listDirs("carts"):
