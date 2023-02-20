@@ -1,6 +1,7 @@
 import bitops
 import std/terminal
 import libretro
+import ../src/pntr
 
 const WIDTH = 320
 const HEIGHT = 240 
@@ -72,10 +73,10 @@ proc retro_set_controller_port_device*(port: cuint; device: cuint) {.cdecl,expor
   echo port, device
 
 proc retro_get_system_info*(info: ptr retro_system_info) {.cdecl,exportc,dynlib.} =
-  info.library_name = "nim_example";
-  info.library_version = "v1"
+  info.library_name = "null0";
+  info.library_version = "v0"
   info.need_fullpath = false
-  info.valid_extensions = nil # we don't use any ROMs
+  info.valid_extensions = "null0|wasm|zip"
 
 proc retro_get_system_av_info*(info: ptr retro_system_av_info) {.cdecl,exportc,dynlib.} =
   info.timing.fps = FPS

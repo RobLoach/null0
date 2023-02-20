@@ -1,6 +1,6 @@
 {.emit: """
-#define PNTR_PIXELFORMAT_RGBA
 #define PNTR_IMPLEMENTATION
+#define PNTR_PIXELFORMAT_RGBA
 #define PNTR_SUPPORT_DEFAULT_FONT
 #define PNTR_SUPPORT_TTF
 
@@ -16,7 +16,7 @@ const PNTR_MAX_FONTS* = 256
 
 type
   pntr_image* {.bycopy.} = object
-    data*: seq[cuint]
+    data*: ptr UncheckedArray[cuint]
     width*: cint
     height*: cint
     pitch*: cint
