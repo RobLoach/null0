@@ -17,8 +17,7 @@ var input_state_cb: retro_input_state_t
 
 proc NimMain() {.cdecl, importc.}
 
-# video framebuffer
-var buf:ptr UncheckedArray[cuint]
+var null0_screen:pntr_image
 
 # colors used for checkerboard
 const color_r:uint32 = 0xff shl 16
@@ -55,14 +54,16 @@ proc retro_set_input_state*(cb: retro_input_state_t) {.cdecl,exportc,dynlib.} =
   input_state_cb = cb
 
 proc retro_init*() {.cdecl,exportc,dynlib.} =
-  NimMain() 
+  NimMain()
+  null0_screen.height = HEIGHT
+  null0_screen.width = WIDTH
   var bufPtr0 = alloc0(sizeof(cuint) * WIDTH * HEIGHT)
-  buf = cast[ptr UncheckedArray[cuint]](bufPtr0)
+  null0_screen.data = cast[ptr UncheckedArray[cuint]](bufPtr0)
   log_cb(RETRO_LOG_DEBUG, "retro_init() called.")
 
 proc retro_deinit*() {.cdecl,exportc,dynlib.} =
   log_cb(RETRO_LOG_DEBUG, "retro_deinit() called.")
-  dealloc(buf)
+  dealloc(null0_screen.data)
   GC_FullCollect()
 
 proc retro_api_version*(): cuint {.cdecl,exportc,dynlib.} =
@@ -97,10 +98,10 @@ proc retro_run*() {.cdecl,exportc,dynlib.} =
       let b = ((y * WIDTH) + x)
       let index_x = uint32 bitand((x shr 4), 1)
       if bool bitxor(index_y, index_x):
-        buf[b] = color_r
+        null0_screen.data[b] = color_r
       else:
-        buf[b] = color_g
-  video_cb(buf, WIDTH, HEIGHT, (WIDTH shl 2))
+        null0_screen.data[b] = color_g
+  video_cb(null0_screen.data, WIDTH, HEIGHT, (WIDTH shl 2))
 
 proc retro_load_game*(info: ptr retro_game_info): bool {.cdecl,exportc,dynlib.} =
   var fmt = RETRO_PIXEL_FORMAT_XRGB8888
