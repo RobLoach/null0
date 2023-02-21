@@ -21,9 +21,14 @@ task clean, "Clean built files":
       rmFile(file)
 
 task libretro, "Build libretro host":
-  selfExec("c -d:release --app:lib --noMain --gc:orc --outDir=. libretro/null0_libretro.nim")
+  selfExec("c -d:debug --app:lib --noMain --gc:orc --outDir=. libretro/null0_libretro.nim")
+
+task cart, "Build a demo cart":
+  let name = paramStr(paramCount())
+  let dir = "carts/" & name
+  exec("cd " & dir & " && nim c main.nim && zip ../../" & name & ".null0 -r main.wasm assets/ && mv main.wasm ../../" & name & ".wasm")
 
 task carts, "Builds all demo carts":
   for dir in listDirs("carts"):
     let (parent, name, ext) = os.splitFile(dir)
-    exec("cd " & dir & " && nim c main.nim && zip ../../" & name & ".null0 -r main.wasm assets/ && mv main.wasm ../../" & name & ".wasm")
+    exec("nimble cart " & name)

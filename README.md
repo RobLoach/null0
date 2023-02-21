@@ -63,3 +63,4 @@ I could not have made this without a great deal of help from others. I am probly
 - [@dcodeIO](https://github.com/dcodeIO) for helping with types in assemblyscript, and wasm in general.
 - [retroarch](https://www.retroarch.com/) & their discord - lots of nice people there willing to put up with dumb questions, and have inciteful answers to troubles I faced. libretro & retroarch are really good for abstracting the details of the target, and letting a deveoper focus on the actual engine.
 - [retroluxury](https://github.com/leiradel/retroluxury) really helped me figure out getting soloud working in libretro. Lots of really great ideas in their engine(s).
+- [PMunch's blog-post](https://peterme.net/dynamic-libraries-in-nim.html) was extremely helpful to figure out nim and libretro cores, and wrapping other C libs. They were also very helpful in nim forums.

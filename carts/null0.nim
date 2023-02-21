@@ -24,33 +24,45 @@ template exportVar*(name: untyped, typ: typedesc) =
   var name {.exportC, codegendecl:"$# EMSCRIPTEN_KEEPALIVE $#".}: typ
 
 type
-  Color* {.bycopy.} = object
+  Color* {.byref,packed.} = object
     b*: uint8
     g*: uint8
     r*: uint8
     a*: uint8
 
+var currentImage* = 0
+
 proc log*(s: cstring){.importc:"null0_log", cdecl.}
 
-proc clear_background*(dest: uint8, color: Color){.importc, cdecl.}
+proc clear_background*(dst: uint8, color: Color){.importc, cdecl.}
 proc clear_background*(color: Color) =
-  clear_background(0, color)
+  clear_background(uint8 0, color)
 
 proc draw_circle*(dst: uint8, centerX: int, centerY: int, radius:int, color: Color){.importc, cdecl.}
 proc draw_circle*(centerX: int, centerY: int, radius:int, color: Color) =
-  draw_circle(0, centerX, centerY, radius, color)
+  draw_circle(uint8 0, centerX, centerY, radius, color)
 
 proc draw_pixel*(dst: uint8, x: cint, y: cint, color: Color){.importc, cdecl.}
-proc draw_pixel*(x: cint; y: cint; color: Color) =
-  draw_pixel(0, x, y, color)
+proc draw_pixel*(x: int; y: int; color: Color) =
+  draw_pixel(uint8 0, cint x, cint y, color)
 
 proc draw_line*(dst: uint8, startPosX: cint, startPosY: cint, endPosX: cint, endPosY: cint, color: Color){.importc, cdecl.}
-proc draw_line*(startPosX: cint, startPosY: cint, endPosX: cint, endPosY: cint, color: Color) =
-  draw_line(0, startPosX, startPosY, endPosX, endPosY, color)
+proc draw_line*(startPosX: int, startPosY: int, endPosX: int, endPosY: int, color: Color) =
+  draw_line(uint8 0, cint startPosX, cint startPosY, cint endPosX, cint endPosY, color)
 
 proc draw_rectangle*(dst: uint8, posX: cint, posY: cint, width: cint, height: cint, color: Color){.importc, cdecl.}
-proc draw_rectangle*(posX: cint, posY: cint, width: cint, height: cint, color: Color) =
-  draw_rectangle(0, posX, posY, width, height, color)
+proc draw_rectangle*(posX: int, posY: int, width: int, height: int, color: Color) =
+  draw_rectangle(0, cint posX, cint posY, cint width, cint height, color)
+
+proc load_image*(destination: uint8, filename: cstring){.importc, cdecl.}
+proc load_image*(filename: string): uint8 = 
+  currentImage = currentImage + 1
+  load_image(uint8 currentImage, filename)
+  return uint8 currentImage
+
+proc draw_image*(dst: uint8, src: uint8, posX: cint, posY: cint){.importc, cdecl.}
+proc draw_image*(src: uint8, posX: int, posY: int) =
+  draw_image(uint8 0, src, cint posX, cint posY)
 
 
 const LIGHTGRAY* = Color(r: 200, g: 200, b: 200, a: 255)

@@ -18,8 +18,6 @@ var input_state_cb: retro_input_state_t
 
 proc NimMain() {.cdecl, importc.}
 
-var null0_screen:ptr pntr_image
-
 proc log_cb(level: retro_log_level, message: string) =
   if level == RETRO_LOG_DEBUG:
     stdout.styledWriteLine(fgBlue, "DEBUG: ", fgDefault, message)
@@ -83,7 +81,7 @@ proc retro_reset*() {.cdecl,exportc,dynlib.} =
 
 proc retro_run*() {.cdecl,exportc,dynlib.} =
   cartUpdate()
-  video_cb(null0_canvas[].data, WIDTH, HEIGHT, (WIDTH shl 2))
+  video_cb(null0_images[0][].data, WIDTH, HEIGHT, (WIDTH shl 2))
 
 proc retro_load_game*(info: ptr retro_game_info): bool {.cdecl,exportc,dynlib.} =
   var fmt = RETRO_PIXEL_FORMAT_XRGB8888

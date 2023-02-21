@@ -11,59 +11,70 @@ var null0_export_load:PFunction
 var null0_export_update:PFunction
 var null0_export_unload:PFunction
 
-var null0_canvas*:ptr pntr_image
 var null0_images*:seq[ptr pntr_image]
 
-proc null0ImportLog(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
+proc fromWasm*(result: var pntr_color, sp: var uint64, mem: pointer) =
+  var i: uint32
+  i.fromWasm(sp, mem)
+  result = cast[ptr pntr_color](cast[uint64](mem) + i)[]
+
+proc fromWasm*(result: var ptr pntr_image, sp: var uint64, mem: pointer) =
+  var i: uint32
+  i.fromWasm(sp, mem)
+  result = null0_images[i]
+
+
+proc null0Import_log(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc logProcImpl(c: cstring) =
     echo c
   var sp = sp.stackPtrToUint()
   callHost(logProcImpl, sp, mem)
 
-proc null0ImportClearBackground(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
-  proc clearBackgroundProcImpl(dst: uint8, color: int32) = 
-    var image = null0_canvas
-    if dst != 0:
-      image = null0_images[dst]
-    clear_background(image, cast[pntr_color](color))
+proc null0Import_clear_background(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   var sp = sp.stackPtrToUint()
-  callHost(clearBackgroundProcImpl, sp, mem)
+  callHost(clear_background, sp, mem)
 
-proc null0ImportDrawCircle(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
-  proc drawCircleProcImpl(dst: uint8, centerX: int, centerY: int, radius:int, color: int32) = 
-    var image = null0_canvas
-    if dst != 0:
-      image = null0_images[dst]
-    draw_circle(image, cint centerX, cint centerY, cint radius, cast[pntr_color](color))
+proc null0Import_draw_circle(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   var sp = sp.stackPtrToUint()
-  callHost(drawCircleProcImpl, sp, mem)
+  callHost(draw_circle, sp, mem)
 
-proc null0ImportDrawPixel(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
-  proc drawPixelProcImpl(dst: uint8, x: cint, y: cint, color: int32) = 
-    var image = null0_canvas
-    if dst != 0:
-      image = null0_images[dst]
-    draw_pixel(image, cint x, cint y, cast[pntr_color](color))
+proc null0Import_draw_pixel(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   var sp = sp.stackPtrToUint()
-  callHost(drawPixelProcImpl, sp, mem)
+  callHost(draw_pixel, sp, mem)
 
-proc null0ImportDrawLine(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
-  proc drawLineProcImpl(dst: uint8, startPosX: cint, startPosY: cint, endPosX: cint, endPosY: cint, color: int32) = 
-    var image = null0_canvas
-    if dst != 0:
-      image = null0_images[dst]
-    draw_line(image, cint startPosX, cint startPosY, cint endPosX, cint endPosY, cast[pntr_color](color))
+proc null0Import_draw_line(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   var sp = sp.stackPtrToUint()
-  callHost(drawLineProcImpl, sp, mem)
+  callHost(draw_line, sp, mem)
 
-proc null0ImportDrawRectangle(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
-  proc drawRectangleProcImpl(dst: uint8, posX: cint, posY: cint, width: cint, height: cint, color: int32) = 
-    var image = null0_canvas
-    if dst != 0:
-      image = null0_images[dst]
-    draw_rectangle(image, cint posX, cint posY, cint width, cint height, cast[pntr_color](color))
+proc null0Import_draw_rectangle(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   var sp = sp.stackPtrToUint()
-  callHost(drawRectangleProcImpl, sp, mem)
+  callHost(draw_rectangle, sp, mem)
+
+proc null0Import_draw_image(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
+  var sp = sp.stackPtrToUint()
+  callHost(draw_image, sp, mem)
+
+proc null0Import_draw_text(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
+  var sp = sp.stackPtrToUint()
+  callHost(draw_text, sp, mem)
+
+proc null0Import_image_crop(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
+  var sp = sp.stackPtrToUint()
+  callHost(image_crop, sp, mem)
+
+proc null0Import_image_copy(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
+  proc ImageCopyProcImpl(destination: uint8, source: uint8): uint8 =
+    null0_images[destination] = image_copy(null0_images[source])
+  var sp = sp.stackPtrToUint()
+  callHost(ImageCopyProcImpl, sp, mem)
+
+proc null0Import_load_image(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
+  proc ImageLoadProcImpl(destination: uint8, filename: cstring): uint8 =
+    echo "load_image: ", filename, " ", destination
+  var sp = sp.stackPtrToUint()
+  callHost(ImageLoadProcImpl, sp, mem)
+
+
 
 proc isZip*(bytes:string): bool =
   ## detect if some bytes (at least 4) are a zip file
@@ -99,32 +110,56 @@ proc cartLoad*(filename:string, data:sink string): void =
   
   # imports may not be exposed 
   try:
-    checkWasmRes m3_LinkRawFunction(module, "*", "null0_log", "v(i)", null0ImportLog)
+    checkWasmRes m3_LinkRawFunction(module, "*", "null0_log", "v(*)", null0Import_log)
   except WasmError:
     discard
   try:
-    checkWasmRes m3_LinkRawFunction(module, "*", "clear_background", "v(ii)", null0ImportClearBackground)
+    checkWasmRes m3_LinkRawFunction(module, "*", "clear_background", "v(ii)", null0Import_clear_background)
   except WasmError:
     discard
   try:
-    checkWasmRes m3_LinkRawFunction(module, "*", "draw_circle", "v(iiiii)", null0ImportDrawCircle)
+    checkWasmRes m3_LinkRawFunction(module, "*", "draw_circle", "v(iiiii)", null0Import_draw_circle)
   except WasmError:
     discard
   try:
-    checkWasmRes m3_LinkRawFunction(module, "*", "draw_pixel", "v(iiii)", null0ImportDrawPixel)
+    checkWasmRes m3_LinkRawFunction(module, "*", "draw_pixel", "v(iiii)", null0Import_draw_pixel)
   except WasmError:
     discard
   try:
-    checkWasmRes m3_LinkRawFunction(module, "*", "draw_line", "v(iiiiii)", null0ImportDrawLine)
+    checkWasmRes m3_LinkRawFunction(module, "*", "draw_line", "v(iiiiii)", null0Import_draw_line)
   except WasmError:
     discard
   try:
-    checkWasmRes m3_LinkRawFunction(module, "*", "draw_rectangle", "v(iiiiii)", null0ImportDrawRectangle)
+    checkWasmRes m3_LinkRawFunction(module, "*", "draw_rectangle", "v(iiiiii)", null0Import_draw_rectangle)
+  except WasmError:
+    discard
+  try:
+    checkWasmRes m3_LinkRawFunction(module, "*", "draw_image", "v(iiii)", null0Import_draw_image)
+  except WasmError:
+    discard
+  try:
+    checkWasmRes m3_LinkRawFunction(module, "*", "draw_text", "v(iiiii)", null0Import_draw_text)
+  except WasmError:
+    discard
+  try:
+    checkWasmRes m3_LinkRawFunction(module, "*", "image_copy", "v(ii)", null0Import_image_copy)
+  except WasmError:
+    discard
+  try:
+    checkWasmRes m3_LinkRawFunction(module, "*", "image_crop", "v(iiiii)", null0Import_image_crop)
+  except WasmError:
+    discard
+  try:
+    checkWasmRes m3_LinkRawFunction(module, "*", "load_image", "v(i*)", null0Import_load_image)
+  except WasmError:
+    discard
+  try:
+    checkWasmRes m3_LinkRawFunction(module, "*", "draw_image", "v(iiii)", null0Import_draw_image)
   except WasmError:
     discard
 
-  null0_canvas = new_image(320, 240)
   null0_images = newSeq[ptr pntr_image](255)
+  null0_images[0] = new_image(320, 240)
   
   try:
     checkWasmRes m3_CompileModule(module)
