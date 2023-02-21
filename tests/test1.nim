@@ -16,6 +16,13 @@ suite "Physfs":
     var b = uint64 f.readBytes(buffer, l)
     f.close()
     check b == l
+    discard deinit()
+
+  test "mount zip file and read from it using read()":
+    check init("test")
+    check mount("graphics.null0", "", true)
+    var b = read("assets/logo-white.png")
+    discard deinit()
 
 
 suite "Cart Utils":
@@ -40,8 +47,8 @@ suite "wasm (justlog)":
     let env = loadWasmEnv(readFile("justlog.wasm"), hostProcs = [
       wasmHostProc("*", "null0_log", "v(i)", logProc)
     ])
-    let cart_load = env.findFunction("load", [], [])
-    cart_load.call(void)
+    let cart_export_load = env.findFunction("load", [], [])
+    cart_export_load.call(void)
 
   test "Setup log hook function and call it, when it doesn't exist":
     proc logProc(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
@@ -52,8 +59,8 @@ suite "wasm (justlog)":
       wasmHostProc("*", "null0_log", "v(i)", logProc)
     ])
     try:
-      let cart_load = env.findFunction("loadbad", [], [])
-      cart_load.call(void)
+      let cart_export_load = env.findFunction("loadbad", [], [])
+      cart_export_load.call(void)
     except WasmError as e:
       echo "more chill error: ", e.msg
 

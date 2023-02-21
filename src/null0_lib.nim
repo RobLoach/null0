@@ -92,121 +92,121 @@ proc cartUnload*(): void =
   if null0_export_unload != nil:
     null0_export_unload.call(void)
 
-proc cartLoad*(filename:string, data:sink string): void = 
-  ## given a filename and some bytes, load a cart
-  if not isWasm(data):
-    echo "Cart is not valid (wasm bytes.)"
-    return
+# proc cartLoad*(filename:string, data:sink string): void = 
+#   ## given a filename and some bytes, load a cart
+#   if not isWasm(data):
+#     echo "Cart is not valid (wasm bytes.)"
+#     return
 
-  var env = m3_NewEnvironment()
-  var runtime = env.m3_NewRuntime(uint16.high.uint32, nil)
-  var module: PModule
+#   var env = m3_NewEnvironment()
+#   var runtime = env.m3_NewRuntime(uint16.high.uint32, nil)
+#   var module: PModule
 
-  checkWasmRes m3_ParseModule(env, module.addr, cast[ptr uint8](data[0].addr), uint32 data.len)
-  checkWasmRes m3_LoadModule(runtime, module)
-  checkWasmRes m3LinkWasi(module)
+#   checkWasmRes m3_ParseModule(env, module.addr, cast[ptr uint8](data[0].addr), uint32 data.len)
+#   checkWasmRes m3_LoadModule(runtime, module)
+#   checkWasmRes m3LinkWasi(module)
   
-  # imports may not be exposed 
-  try:
-    checkWasmRes m3_LinkRawFunction(module, "*", "null0_log", "v(*)", null0Import_log)
-  except WasmError:
-    discard
-  try:
-    checkWasmRes m3_LinkRawFunction(module, "*", "clear_background", "v(ii)", null0Import_clear_background)
-  except WasmError:
-    discard
-  try:
-    checkWasmRes m3_LinkRawFunction(module, "*", "draw_circle", "v(iiiii)", null0Import_draw_circle)
-  except WasmError:
-    discard
-  try:
-    checkWasmRes m3_LinkRawFunction(module, "*", "draw_pixel", "v(iiii)", null0Import_draw_pixel)
-  except WasmError:
-    discard
-  try:
-    checkWasmRes m3_LinkRawFunction(module, "*", "draw_line", "v(iiiiii)", null0Import_draw_line)
-  except WasmError:
-    discard
-  try:
-    checkWasmRes m3_LinkRawFunction(module, "*", "draw_rectangle", "v(iiiiii)", null0Import_draw_rectangle)
-  except WasmError:
-    discard
-  try:
-    checkWasmRes m3_LinkRawFunction(module, "*", "draw_image", "v(iiii)", null0Import_draw_image)
-  except WasmError:
-    discard
-  try:
-    checkWasmRes m3_LinkRawFunction(module, "*", "draw_text", "v(iiiii)", null0Import_draw_text)
-  except WasmError:
-    discard
-  try:
-    checkWasmRes m3_LinkRawFunction(module, "*", "image_copy", "v(ii)", null0Import_image_copy)
-  except WasmError:
-    discard
-  try:
-    checkWasmRes m3_LinkRawFunction(module, "*", "image_crop", "v(iiiii)", null0Import_image_crop)
-  except WasmError:
-    discard
-  try:
-    checkWasmRes m3_LinkRawFunction(module, "*", "load_image", "v(i*)", null0Import_load_image)
-  except WasmError:
-    discard
-  try:
-    checkWasmRes m3_LinkRawFunction(module, "*", "draw_image", "v(iiii)", null0Import_draw_image)
-  except WasmError:
-    discard
+#   # imports may not be exposed 
+#   try:
+#     checkWasmRes m3_LinkRawFunction(module, "*", "null0_log", "v(*)", null0Import_log)
+#   except WasmError:
+#     discard
+#   try:
+#     checkWasmRes m3_LinkRawFunction(module, "*", "clear_background", "v(ii)", null0Import_clear_background)
+#   except WasmError:
+#     discard
+#   try:
+#     checkWasmRes m3_LinkRawFunction(module, "*", "draw_circle", "v(iiiii)", null0Import_draw_circle)
+#   except WasmError:
+#     discard
+#   try:
+#     checkWasmRes m3_LinkRawFunction(module, "*", "draw_pixel", "v(iiii)", null0Import_draw_pixel)
+#   except WasmError:
+#     discard
+#   try:
+#     checkWasmRes m3_LinkRawFunction(module, "*", "draw_line", "v(iiiiii)", null0Import_draw_line)
+#   except WasmError:
+#     discard
+#   try:
+#     checkWasmRes m3_LinkRawFunction(module, "*", "draw_rectangle", "v(iiiiii)", null0Import_draw_rectangle)
+#   except WasmError:
+#     discard
+#   try:
+#     checkWasmRes m3_LinkRawFunction(module, "*", "draw_image", "v(iiii)", null0Import_draw_image)
+#   except WasmError:
+#     discard
+#   try:
+#     checkWasmRes m3_LinkRawFunction(module, "*", "draw_text", "v(iiiii)", null0Import_draw_text)
+#   except WasmError:
+#     discard
+#   try:
+#     checkWasmRes m3_LinkRawFunction(module, "*", "image_copy", "v(ii)", null0Import_image_copy)
+#   except WasmError:
+#     discard
+#   try:
+#     checkWasmRes m3_LinkRawFunction(module, "*", "image_crop", "v(iiiii)", null0Import_image_crop)
+#   except WasmError:
+#     discard
+#   try:
+#     checkWasmRes m3_LinkRawFunction(module, "*", "load_image", "v(i*)", null0Import_load_image)
+#   except WasmError:
+#     discard
+#   try:
+#     checkWasmRes m3_LinkRawFunction(module, "*", "draw_image", "v(iiii)", null0Import_draw_image)
+#   except WasmError:
+#     discard
 
-  null0_images = newSeq[ptr pntr_image](255)
-  null0_images[0] = new_image(320, 240)
+#   null0_images = newSeq[ptr pntr_image](255)
+#   null0_images[0] = new_image(320, 240)
   
-  try:
-    checkWasmRes m3_CompileModule(module)
-  except WasmError as e:
-    echo e.msg
+#   try:
+#     checkWasmRes m3_CompileModule(module)
+#   except WasmError as e:
+#     echo e.msg
 
-  try:
-    checkWasmRes m3_FindFunction(null0_export_update.addr, runtime, "update")
-  except WasmError:
-    discard
-  try:
-    checkWasmRes m3_FindFunction(null0_export_unload.addr, runtime, "unload")
-  except WasmError:
-    discard
-  try:
-    checkWasmRes m3_FindFunction(null0_export_load.addr, runtime, "load")
-  except WasmError:
-    discard
+#   try:
+#     checkWasmRes m3_FindFunction(null0_export_update.addr, runtime, "update")
+#   except WasmError:
+#     discard
+#   try:
+#     checkWasmRes m3_FindFunction(null0_export_unload.addr, runtime, "unload")
+#   except WasmError:
+#     discard
+#   try:
+#     checkWasmRes m3_FindFunction(null0_export_load.addr, runtime, "load")
+#   except WasmError:
+#     discard
 
-  if null0_export_load != nil:
-    null0_export_load.call(void)
+#   if null0_export_load != nil:
+#     null0_export_load.call(void)
 
 
-proc cartLoad*(filename: string): void =
-  ## given a filename, load a cart
-  if (dirExists(filename)):
-    if not physfs.mount(filename, "", true):
-      echo "Could not mount " & filename
-      return
-    if not physfs.exists("main.wasm"):
-      echo "No main.wasm in " & filename
-      return
-    let data = physfs.read("main.wasm")
-    cartLoad(filename, data)
-  else:
-    if not fileExists(filename):
-      echo "Could not find " & filename
-      return
-    var data = readFile(filename)
-    if (isWasm(data)):
-      cartLoad(filename, data)
-    elif isZip(data):
-      if not physfs.mountMemory(data, filename, "", true):
-        echo "Could not mount " & filename
-        return
-      if not physfs.exists("main.wasm"):
-        echo "No main.wasm in " & filename
-        return
-      let zd = physfs.read("main.wasm")
-      cartLoad(filename, zd)
-    else:
-      echo "Invalid cart (not a wasm or zip file.)"
+# proc cartLoad*(filename: string): void =
+#   ## given a filename, load a cart
+#   if (dirExists(filename)):
+#     if not physfs.mount(filename, "", true):
+#       echo "Could not mount " & filename
+#       return
+#     if not physfs.exists("main.wasm"):
+#       echo "No main.wasm in " & filename
+#       return
+#     let data = physfs.read("main.wasm")
+#     cartLoad(filename, data)
+#   else:
+#     if not fileExists(filename):
+#       echo "Could not find " & filename
+#       return
+#     var data = readFile(filename)
+#     if (isWasm(data)):
+#       cartLoad(filename, data)
+#     elif isZip(data):
+#       if not physfs.mountMemory(data, filename, "", true):
+#         echo "Could not mount " & filename
+#         return
+#       if not physfs.exists("main.wasm"):
+#         echo "No main.wasm in " & filename
+#         return
+#       let zd = physfs.read("main.wasm")
+#       cartLoad(filename, zd)
+#     else:
+#       echo "Invalid cart (not a wasm or zip file.)"

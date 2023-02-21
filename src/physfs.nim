@@ -18,6 +18,7 @@ type
 
 {.push callconv: cdecl, importc:"PHYSFS_$1".}
 proc init*(name: cstring): cint
+proc deinit*(): cint
 proc mount*(newDir: cstring, mountPoint: cstring, appendToPath:cint): cint
 proc openRead*(filename: cstring): ptr PHYSFS_File
 proc exists*(name: cstring): int
@@ -42,12 +43,13 @@ proc mount*(newDir: string, mountPoint: string, appendToPath:bool): bool =
 proc mountMemory*(buff: var string, newDir:string, mountPoint:string, appendToPath:bool): bool =
   return mountMemory(addr buff, buff.len, none(pointer), cstring newDir, cstring mountPoint, (if appendToPath: 1 else: 0)) == 1
 
-proc read*(filename:string): string =
-  let f = openRead(cstring filename)
-  let s = f.fileLength()
-  if s > 0:
-    var str = newString(s) 
-    discard f.readBytes(addr str, uint64 s)
-    f.close()
-    return str
+proc read*(filename:string): pointer =
+  if not exists("assets/logo-white.png"):
+    return 
+  var f = openRead(filename)
+  var l = uint64 f.fileLength
+  var buffer:pointer = alloc(l)
+  var b = uint64 f.readBytes(buffer, l)
   f.close()
+  if b == l:
+    return buffer
