@@ -2,6 +2,21 @@ import unittest
 import wasm3
 import wasm3/wasm3c
 import ../src/null0_lib
+import ../src/physfs
+
+suite "Physfs":
+  test "mount zip file and read from it":
+    check init("test")
+    check mount("graphics.null0", "", true)
+    check exists("assets/logo-white.png")
+    var f = openRead("assets/logo-white.png")
+    var l = uint64 f.fileLength
+    check l == 11228
+    var buffer:pointer = alloc(l)
+    var b = uint64 f.readBytes(buffer, l)
+    f.close()
+    check b == l
+
 
 suite "Cart Utils":
   test "isZip":
@@ -16,7 +31,7 @@ suite "Cart Utils":
     check isWasm(w)
     check isWasm(z) != true
 
-suite "Raw C wrapping (justlog)":
+suite "wasm (justlog)":
   test "Setup log hook function and call it":
     proc logProc(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
       var sp = sp.stackPtrToUint()

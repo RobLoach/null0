@@ -1,25 +1,18 @@
---os:linux # Emscripten pretends to be linux.
---cpu:wasm32 # Emscripten is 32bits.
---cc:clang # Emscripten is very close to clang, so we ill replace it.
---listCmd # List what commands we are running so that we can debug them.
+--os:linux
+--cpu:wasm32
+--cc:clang
+--listCmd
 --gc:none
---exceptions:goto # Goto exceptions are friendlier with crazy platforms.
---define:noSignalHandler # Emscripten doesn't support signal handlers.
+--exceptions:goto
+--define:noSignalHandler
 --noMain:on
---threads:off # 1.7.1 defaults this on
+--threads:off
 --define:release
 
-when defined(windows):
-  --clang.exe:emcc.bat  # Replace C
-  --clang.linkerexe:emcc.bat # Replace C linker
-  --clang.cpp.exe:emcc.bat # Replace C++
-  --clang.cpp.linkerexe:emcc.bat # Replace C++ linker.
-else:
-  --clang.exe:emcc  # Replace C
-  --clang.linkerexe:emcc # Replace C linker
-  --clang.cpp.exe:emcc # Replace C++
-  --clang.cpp.linkerexe:emcc # Replace C++ linker.
+--clang.exe:emcc
+--clang.linkerexe:emcc
+--clang.cpp.exe:emcc
+--clang.cpp.linkerexe:emcc
  
-# Pass this to Emscripten linker to generate html file scaffold for us.
-switch("passL", "--no-entry -sSTANDALONE_WASM=1 -sERROR_ON_UNDEFINED_SYMBOLS=0") # No need for main, it's standalone wasm, and we dont need to error on undefined as we're probably importing
+switch("passL", "--no-entry -sSTANDALONE_WASM=1 -sERROR_ON_UNDEFINED_SYMBOLS=0")
 switch("passL", "-o " & projectName() & ".wasm")

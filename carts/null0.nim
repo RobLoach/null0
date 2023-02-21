@@ -30,7 +30,7 @@ type
     r*: uint8
     a*: uint8
 
-var currentImage* = 0
+var currentImage:uint8 = 0
 
 proc log*(s: cstring){.importc:"null0_log", cdecl.}
 
@@ -52,13 +52,13 @@ proc draw_line*(startPosX: int, startPosY: int, endPosX: int, endPosY: int, colo
 
 proc draw_rectangle*(dst: uint8, posX: cint, posY: cint, width: cint, height: cint, color: Color){.importc, cdecl.}
 proc draw_rectangle*(posX: int, posY: int, width: int, height: int, color: Color) =
-  draw_rectangle(0, cint posX, cint posY, cint width, cint height, color)
+  draw_rectangle(uint8 0, cint posX, cint posY, cint width, cint height, color)
 
 proc load_image*(destination: uint8, filename: cstring){.importc, cdecl.}
 proc load_image*(filename: string): uint8 = 
   currentImage = currentImage + 1
-  load_image(uint8 currentImage, filename)
-  return uint8 currentImage
+  load_image(currentImage, filename)
+  return currentImage
 
 proc draw_image*(dst: uint8, src: uint8, posX: cint, posY: cint){.importc, cdecl.}
 proc draw_image*(src: uint8, posX: int, posY: int) =

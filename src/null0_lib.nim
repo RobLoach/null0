@@ -18,11 +18,9 @@ proc fromWasm*(result: var pntr_color, sp: var uint64, mem: pointer) =
   i.fromWasm(sp, mem)
   result = cast[ptr pntr_color](cast[uint64](mem) + i)[]
 
-proc fromWasm*(result: var ptr pntr_image, sp: var uint64, mem: pointer) =
-  var i: uint32
-  i.fromWasm(sp, mem)
-  result = null0_images[i]
-
+proc fromWasm*(result: var ptr pntr_image, val: uint8, mem: pointer) =
+  echo val
+  result = null0_images[val]
 
 proc null0Import_log(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc logProcImpl(c: cstring) =
@@ -69,11 +67,11 @@ proc null0Import_image_copy(runtime: PRuntime; ctx: PImportContext; sp: ptr uint
   callHost(ImageCopyProcImpl, sp, mem)
 
 proc null0Import_load_image(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
-  proc ImageLoadProcImpl(destination: uint8, filename: cstring): uint8 =
-    echo "load_image: ", filename, " ", destination
   var sp = sp.stackPtrToUint()
-  callHost(ImageLoadProcImpl, sp, mem)
-
+  extractAs(destination, uint8, sp, mem)
+  extractAs(filename, cstring, sp, mem)
+  # var bytes: string = physfs.read($filename)
+  # null0_images[destination] = load_image_from_memory(addr bytes, dataSize)
 
 
 proc isZip*(bytes:string): bool =
@@ -198,7 +196,7 @@ proc cartLoad*(filename: string): void =
     if not fileExists(filename):
       echo "Could not find " & filename
       return
-    let data = readFile(filename)
+    var data = readFile(filename)
     if (isWasm(data)):
       cartLoad(filename, data)
     elif isZip(data):
