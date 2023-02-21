@@ -23,6 +23,7 @@ suite "Physfs":
     check mount("graphics.null0", "", true)
     var b = read("assets/logo-white.png")
     discard deinit()
+    echo string(b)
 
 
 suite "Cart Utils":
