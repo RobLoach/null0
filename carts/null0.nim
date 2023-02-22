@@ -28,6 +28,7 @@ type
     a*: uint8
 
 var currentImage:uint8 = 0
+var currentFont:uint8 = 0
 
 proc log*(s: cstring){.importc:"null0_log", cdecl.}
 
@@ -66,6 +67,24 @@ proc draw_text*(font: uint8, text: string, posX: int, posY: int) =
   draw_text(uint8 0, font, text, cint posX, cint posY)
 proc draw_text*(text: string, posX: int, posY: int) =
   draw_text(uint8 0, uint8 0, text, cint posX, cint posY)
+
+proc load_font_bm*(destination: uint8, filename: cstring, chars: cstring){.importc, cdecl.}
+proc load_font_bm*(filename: string, chars: string): uint8 = 
+  currentFont = currentFont + 1
+  load_font_bm(currentFont, filename, chars)
+  return currentFont
+
+proc load_font_tty*(destination: uint8, filename: cstring, glyphWidth: cint, glyphHeight: cint, chars: cstring){.importc, cdecl.}
+proc load_font_tty*(filename: string, glyphWidth: cint, glyphHeight: cint, chars: string): uint8 = 
+  currentFont = currentFont + 1
+  load_font_tty(currentFont, filename, glyphWidth, glyphHeight, chars)
+  return currentFont
+
+proc load_font_ttf*(destination: uint8, filename: cstring, fontSize: cint, fontColor: Color){.importc, cdecl.}
+proc load_font_ttf*(filename: cstring, fontSize: cint, fontColor: Color): uint8 = 
+  currentFont = currentFont + 1
+  load_font_ttf(currentFont, filename, fontSize, fontColor)
+  return currentFont
 
 const LIGHTGRAY* = Color(r: 200, g: 200, b: 200, a: 255)
 const GRAY* = Color(r: 130, g: 130, b: 130, a: 255)

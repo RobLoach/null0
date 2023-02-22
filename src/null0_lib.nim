@@ -99,6 +99,29 @@ proc null0Import_load_image(runtime: PRuntime; ctx: PImportContext; sp: ptr uint
   var sp = sp.stackPtrToUint()
   callHost(loadImageProcImpl, sp, mem)
 
+proc null0Import_load_font_bmfont(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
+  proc loadBmFontProcImpl(destination: uint8, filename: cstring, characters: cstring) =
+    var bytes = physfs.read($filename)
+    var dataSize = cuint fileLength($filename)
+    null0_fonts[destination] = pntr.load_bmfont_from_memory(bytes, dataSize, characters)
+  var sp = sp.stackPtrToUint()
+  callHost(loadBmFontProcImpl, sp, mem)
+
+proc null0Import_load_font_ttyfont(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
+  proc loadTtyFontProcImpl(destination: uint8, filename: cstring, glyphWidth: cint, glyphHeight: cint, characters: cstring) =
+    var bytes = physfs.read($filename)
+    var dataSize = cuint fileLength($filename)
+    null0_fonts[destination] = pntr.load_ttyfont_from_memory(bytes, dataSize, glyphWidth, glyphHeight, characters)
+  var sp = sp.stackPtrToUint()
+  callHost(loadTtyFontProcImpl, sp, mem)
+
+proc null0Import_load_font_ttffont(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
+  proc loadTtfFontProcImpl(destination: uint8, filename: cstring, fontSize: cint, fontColor: pntr_color) =
+    var bytes = physfs.read($filename)
+    var dataSize = cuint fileLength($filename)
+    null0_fonts[destination] = pntr.load_ttffont_from_memory(bytes, dataSize, fontSize, fontColor)
+  var sp = sp.stackPtrToUint()
+  callHost(loadTtfFontProcImpl, sp, mem)
 
 proc isZip*(bytes: string): bool =
   ## detect if some bytes (at least 4) are a zip file
@@ -197,6 +220,18 @@ proc cartLoad*(filename:string, data: ptr UncheckedArray[byte], length: uint64) 
     discard
   try:
     checkWasmRes m3_LinkRawFunction(module, "*", "draw_text", "v(ii*ii)", null0Import_draw_text)
+  except WasmError:
+    discard
+  try:
+    checkWasmRes m3_LinkRawFunction(module, "*", "load_font_bm", "v(i**)", null0Import_load_font_bmfont)
+  except WasmError:
+    discard
+  try:
+    checkWasmRes m3_LinkRawFunction(module, "*", "load_font_tty", "v(i*ii*)", null0Import_load_font_ttyfont)
+  except WasmError:
+    discard
+  try:
+    checkWasmRes m3_LinkRawFunction(module, "*", "load_font_ttf", "v(i*ii)", null0Import_load_font_ttffont)
   except WasmError:
     discard
 
