@@ -7,3 +7,4 @@ tests/test1
 *.dylib
 *.dll
 *.a
+demo.png

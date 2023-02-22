@@ -20,9 +20,6 @@ macro null0*(t: typed): untyped =
   result.add:
     newProc
 
-template exportVar*(name: untyped, typ: typedesc) =
-  var name {.exportC, codegendecl:"$# EMSCRIPTEN_KEEPALIVE $#".}: typ
-
 type
   Color* {.byref,packed.} = object
     b*: uint8

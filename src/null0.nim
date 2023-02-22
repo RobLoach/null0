@@ -1,6 +1,7 @@
 import docopt
 import null0_lib
 import physfs
+import pntr
 
 const doc = """
 null0 - Runtime for null0 game-engine
@@ -28,6 +29,11 @@ proc main() =
     echo "Could not init filesystem."
     return
   cartLoad(filename)
+  cartUpdate()
+
+  # take a screenshot
+  discard pntr.save_image(null0_images[0], "demo.png")
+
   cartUnload()
 
 when isMainModule:
