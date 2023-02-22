@@ -51,10 +51,6 @@ proc null0Import_draw_rectangle(runtime: PRuntime; ctx: PImportContext; sp: ptr 
   var sp = sp.stackPtrToUint()
   callHost(pntr.draw_rectangle, sp, mem)
 
-# proc null0Import_draw_image(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
-#   var sp = sp.stackPtrToUint()
-#   callHost(pntr.draw_image, sp, mem)
-
 proc null0Import_draw_text(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   var sp = sp.stackPtrToUint()
   callHost(pntr.draw_text, sp, mem)
@@ -63,13 +59,18 @@ proc null0Import_image_crop(runtime: PRuntime; ctx: PImportContext; sp: ptr uint
   var sp = sp.stackPtrToUint()
   callHost(pntr.image_crop, sp, mem)
 
-# procs that load stuff need wrapping
+# this should work with callHost, but it doesn't
+# proc null0Import_draw_image(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
+#   var sp = sp.stackPtrToUint()
+#   callHost(pntr.draw_image, sp, mem)
 
 proc null0Import_draw_image(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc drawImageProcImpl(dst: uint8, src: uint8, posX: cint, posY: cint) =
     pntr.draw_image(null0_images[dst], null0_images[src], posX, posY)
   var sp = sp.stackPtrToUint()
   callHost(drawImageProcImpl, sp, mem)
+
+# procs that load stuff need wrapping
 
 proc null0Import_image_copy(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc imageCopyProcImpl(destination: uint8, source: uint8): uint8 =
