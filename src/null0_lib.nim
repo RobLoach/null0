@@ -41,41 +41,49 @@ proc null0Import_draw_circle(runtime: PRuntime; ctx: PImportContext; sp: ptr uin
 
 proc null0Import_draw_pixel(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   var sp = sp.stackPtrToUint()
-  callHost(draw_pixel, sp, mem)
+  callHost(pntr.draw_pixel, sp, mem)
 
 proc null0Import_draw_line(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   var sp = sp.stackPtrToUint()
-  callHost(draw_line, sp, mem)
+  callHost(pntr.draw_line, sp, mem)
 
 proc null0Import_draw_rectangle(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   var sp = sp.stackPtrToUint()
-  callHost(draw_rectangle, sp, mem)
+  callHost(pntr.draw_rectangle, sp, mem)
 
-proc null0Import_draw_image(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
-  var sp = sp.stackPtrToUint()
-  callHost(draw_image, sp, mem)
+# proc null0Import_draw_image(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
+#   var sp = sp.stackPtrToUint()
+#   callHost(pntr.draw_image, sp, mem)
 
 proc null0Import_draw_text(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   var sp = sp.stackPtrToUint()
-  callHost(draw_text, sp, mem)
+  callHost(pntr.draw_text, sp, mem)
 
 proc null0Import_image_crop(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   var sp = sp.stackPtrToUint()
-  callHost(image_crop, sp, mem)
+  callHost(pntr.image_crop, sp, mem)
+
+# procs that load stuff need wrapping
+
+proc null0Import_draw_image(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
+  proc drawImageProcImpl(dst: uint8, src: uint8, posX: cint, posY: cint) =
+    pntr.draw_image(null0_images[dst], null0_images[src], posX, posY)
+  var sp = sp.stackPtrToUint()
+  callHost(drawImageProcImpl, sp, mem)
 
 proc null0Import_image_copy(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
-  proc ImageCopyProcImpl(destination: uint8, source: uint8): uint8 =
-    null0_images[destination] = image_copy(null0_images[source])
+  proc imageCopyProcImpl(destination: uint8, source: uint8): uint8 =
+    null0_images[destination] = pntr.image_copy(null0_images[source])
   var sp = sp.stackPtrToUint()
-  callHost(ImageCopyProcImpl, sp, mem)
+  callHost(imageCopyProcImpl, sp, mem)
 
 proc null0Import_load_image(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
+  proc loadImageProcImpl(destination: uint8, filename: cstring) =
+    var bytes = physfs.read($filename)
+    var dataSize = cuint fileLength($filename)
+    null0_images[destination] = pntr.load_image_from_memory(bytes, dataSize)
   var sp = sp.stackPtrToUint()
-  extractAs(destination, uint8, sp, mem)
-  extractAs(filename, cstring, sp, mem)
-  echo "load_image ", destination, filename
-  # var bytes: string = physfs.read($filename)
-  # null0_images[destination] = load_image_from_memory(addr bytes, dataSize)
+  callHost(loadImageProcImpl, sp, mem)
 
 
 proc isZip*(bytes: string): bool =
@@ -108,7 +116,7 @@ proc cartUnload*(): void =
 
 proc cartLoad*(filename:string, data: ptr UncheckedArray[byte], length: uint64) = 
   ## given a filename and some bytes, load a cart
-  
+
   if not isWasm(data):
     echo "Cart is not valid (wasm bytes.)"
     return

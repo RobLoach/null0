@@ -117,7 +117,7 @@ proc save_image*(image: ptr pntr_image; fileName: cstring): bool
 proc save_image_to_memory*(image: ptr pntr_image; dataSize: ptr cuint): ptr uint8
 proc get_pixel_data_size*(width: cint; height: cint; pixelFormat: pntr_pixelformat): cint
 proc load_image*(fileName: cstring): ptr pntr_image
-proc load_image_from_memory*(fileData: ptr string; dataSize: var ptr cuint): ptr pntr_image
+proc load_image_from_memory*(fileData: pointer; dataSize: cuint): ptr pntr_image
 proc image_from_pixelformat*(data: pointer; width: cint; height: cint; pixelFormat: pntr_pixelformat): ptr pntr_image
 proc get_error*(): cstring
 proc set_error*(error: cstring): pointer
@@ -134,17 +134,17 @@ proc load_default_font*(): ptr pntr_font
 proc unload_font*(font: ptr pntr_font)
 proc load_bmfont*(fileName: cstring; characters: cstring): ptr pntr_font
 proc load_bmfont_from_image*(image: ptr pntr_image; characters: cstring): ptr pntr_font
-proc load_bmfont_from_memory*(fileData: ptr uint8; dataSize: ptr cuint; characters: cstring): ptr pntr_font
+proc load_bmfont_from_memory*(fileData: pointer; dataSize: cuint; characters: cstring): ptr pntr_font
 proc measure_text*(font: ptr pntr_font; text: cstring): cint
 proc measure_text_ex*(font: ptr pntr_font; text: cstring): pntr_vector
 proc gen_image_text*(font: ptr pntr_font; text: cstring): ptr pntr_image
 proc load_ttyfont*(fileName: cstring; glyphWidth: cint; glyphHeight: cint; characters: cstring): ptr pntr_font
-proc load_ttyfont_from_memory*(fileData: ptr uint8; dataSize: ptr cuint; glyphWidth: cint; glyphHeight: cint; characters: cstring): ptr pntr_font
+proc load_ttyfont_from_memory*(fileData: pointer; dataSize: cuint; glyphWidth: cint; glyphHeight: cint; characters: cstring): ptr pntr_font
 proc load_ttyfont_from_image*(image: ptr pntr_image; glyphWidth: cint; glyphHeight: cint; characters: cstring): ptr pntr_font
 proc load_file*(fileName: cstring; bytesRead: ptr cuint): ptr uint8
 proc unload_file*(fileData: ptr uint8)
 proc load_ttffont*(fileName: cstring; fontSize: cint; fontColor: pntr_color): ptr pntr_font
-proc load_ttffont_from_memory*(fileData: ptr uint8; dataSize: ptr cuint; fontSize: cint; fontColor: pntr_color): ptr pntr_font
+proc load_ttffont_from_memory*(fileData: pointer; dataSize: cuint; fontSize: cint; fontColor: pntr_color): ptr pntr_font
 proc color_invert*(color: pntr_color): pntr_color
 proc image_color_invert*(image: ptr pntr_image)
 proc color_alpha_blend*(dst: pntr_color; src: pntr_color): pntr_color
