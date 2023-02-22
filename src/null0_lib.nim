@@ -19,9 +19,11 @@ proc fromWasm*(result: var pntr_color, sp: var uint64, mem: pointer) =
   i.fromWasm(sp, mem)
   result = cast[ptr pntr_color](cast[uint64](mem) + i)[]
 
-proc fromWasm*(result: var ptr pntr_image, val: uint8, mem: pointer) =
-  echo val
-  result = null0_images[val]
+proc fromWasm*(result: var ptr pntr_image, sp: var uint64, mem: pointer) =
+  var i: uint32
+  i.fromWasm(sp, mem)
+  var d = cast[ptr uint8](cast[uint64](mem) + i)[]
+  result = null0_images[d]
 
 proc null0Import_log(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc logProcImpl(c: cstring) =
@@ -31,11 +33,11 @@ proc null0Import_log(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem
 
 proc null0Import_clear_background(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   var sp = sp.stackPtrToUint()
-  callHost(clear_background, sp, mem)
+  callHost(pntr.clear_background, sp, mem)
 
 proc null0Import_draw_circle(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   var sp = sp.stackPtrToUint()
-  callHost(draw_circle, sp, mem)
+  callHost(pntr.draw_circle, sp, mem)
 
 proc null0Import_draw_pixel(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   var sp = sp.stackPtrToUint()
@@ -71,6 +73,7 @@ proc null0Import_load_image(runtime: PRuntime; ctx: PImportContext; sp: ptr uint
   var sp = sp.stackPtrToUint()
   extractAs(destination, uint8, sp, mem)
   extractAs(filename, cstring, sp, mem)
+  echo "load_image ", destination, filename
   # var bytes: string = physfs.read($filename)
   # null0_images[destination] = load_image_from_memory(addr bytes, dataSize)
 
@@ -105,12 +108,12 @@ proc cartUnload*(): void =
 
 proc cartLoad*(filename:string, data: ptr UncheckedArray[byte], length: uint64) = 
   ## given a filename and some bytes, load a cart
-
-  # var b = cast[ptr array[4, byte]](data)
-  # echo filename, " ", length, " ", b[0], " ", b[1], " ", b[2], " ", b[3]
+  
   if not isWasm(data):
     echo "Cart is not valid (wasm bytes.)"
     return
+
+  null0_images[0] = new_image(320, 240)
 
   var env = m3_NewEnvironment()
   var runtime = env.m3_NewRuntime(uint16.high.uint32, nil)
@@ -169,8 +172,6 @@ proc cartLoad*(filename:string, data: ptr UncheckedArray[byte], length: uint64) 
     checkWasmRes m3_LinkRawFunction(module, "*", "draw_image", "v(iiii)", null0Import_draw_image)
   except WasmError:
     discard
-
-  null0_images[0] = new_image(320, 240)
   
   try:
     checkWasmRes m3_CompileModule(module)
