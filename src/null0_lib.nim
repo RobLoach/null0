@@ -13,6 +13,7 @@ var null0_export_update:PFunction
 var null0_export_unload:PFunction
 
 var null0_images*:array[255, ptr pntr_image]
+var null0_fonts*:array[255, ptr pntr_font]
 
 proc fromWasm*(result: var pntr_color, sp: var uint64, mem: pointer) =
   var i: uint32
@@ -24,6 +25,12 @@ proc fromWasm*(result: var ptr pntr_image, sp: var uint64, mem: pointer) =
   i.fromWasm(sp, mem)
   var d = cast[ptr uint8](cast[uint64](mem) + i)[]
   result = null0_images[d]
+
+proc fromWasm*(result: var ptr pntr_font, sp: var uint64, mem: pointer) =
+  var i: uint32
+  i.fromWasm(sp, mem)
+  var d = cast[ptr uint8](cast[uint64](mem) + i)[]
+  result = null0_fonts[d]
 
 proc null0Import_log(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc logProcImpl(c: cstring) =
@@ -51,10 +58,6 @@ proc null0Import_draw_rectangle(runtime: PRuntime; ctx: PImportContext; sp: ptr 
   var sp = sp.stackPtrToUint()
   callHost(pntr.draw_rectangle, sp, mem)
 
-proc null0Import_draw_text(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
-  var sp = sp.stackPtrToUint()
-  callHost(pntr.draw_text, sp, mem)
-
 proc null0Import_image_crop(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   var sp = sp.stackPtrToUint()
   callHost(pntr.image_crop, sp, mem)
@@ -64,11 +67,21 @@ proc null0Import_image_crop(runtime: PRuntime; ctx: PImportContext; sp: ptr uint
 #   var sp = sp.stackPtrToUint()
 #   callHost(pntr.draw_image, sp, mem)
 
+# proc null0Import_draw_text(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
+#   var sp = sp.stackPtrToUint()
+#   callHost(pntr.image_crop, sp, mem)
+
 proc null0Import_draw_image(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc drawImageProcImpl(dst: uint8, src: uint8, posX: cint, posY: cint) =
     pntr.draw_image(null0_images[dst], null0_images[src], posX, posY)
   var sp = sp.stackPtrToUint()
   callHost(drawImageProcImpl, sp, mem)
+
+proc null0Import_draw_text(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
+  proc drawTextProcImpl(dst: uint8, font: uint8, text: cstring, posX: cint, posY: cint) =
+    pntr.draw_text(null0_images[dst], null0_fonts[font], text, posX, posY)
+  var sp = sp.stackPtrToUint()
+  callHost(drawTextProcImpl, sp, mem)
 
 # procs that load stuff need wrapping
 
@@ -123,6 +136,7 @@ proc cartLoad*(filename:string, data: ptr UncheckedArray[byte], length: uint64) 
     return
 
   null0_images[0] = new_image(320, 240)
+  null0_fonts[0] = load_default_font()
 
   var env = m3_NewEnvironment()
   var runtime = env.m3_NewRuntime(uint16.high.uint32, nil)
@@ -181,7 +195,11 @@ proc cartLoad*(filename:string, data: ptr UncheckedArray[byte], length: uint64) 
     checkWasmRes m3_LinkRawFunction(module, "*", "draw_image", "v(iiii)", null0Import_draw_image)
   except WasmError:
     discard
-  
+  try:
+    checkWasmRes m3_LinkRawFunction(module, "*", "draw_text", "v(ii*ii)", null0Import_draw_text)
+  except WasmError:
+    discard
+
   try:
     checkWasmRes m3_CompileModule(module)
   except WasmError as e:

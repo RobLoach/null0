@@ -61,6 +61,11 @@ proc draw_image*(dst: uint8, src: uint8, posX: cint, posY: cint){.importc, cdecl
 proc draw_image*(src: uint8, posX: int, posY: int) =
   draw_image(uint8 0, src, cint posX, cint posY)
 
+proc draw_text*(dst: uint8, font: uint8, text: cstring, posX: cint, posY: cint){.importc, cdecl.}
+proc draw_text*(font: uint8, text: string, posX: int, posY: int) =
+  draw_text(uint8 0, font, text, cint posX, cint posY)
+proc draw_text*(text: string, posX: int, posY: int) =
+  draw_text(uint8 0, uint8 0, text, cint posX, cint posY)
 
 const LIGHTGRAY* = Color(r: 200, g: 200, b: 200, a: 255)
 const GRAY* = Color(r: 130, g: 130, b: 130, a: 255)
