@@ -24,9 +24,9 @@ proc openRead*(filename: cstring): ptr PHYSFS_File
 proc exists*(name: cstring): int
 proc close*(handle: ptr PHYSFS_File): void
 proc fileLength*(handle: ptr PHYSFS_File): int64
-proc readBytes*(handle: ptr PHYSFS_File, buffer: pointer, len: uint64): int64
-proc writeBytes*(handle: ptr PHYSFS_File, buffer: pointer, len: uint64): int64
-proc mountMemory*(buff: ptr string, length:int64, del:Option[pointer], newDir:cstring, mountPoint:cstring, appendToPath:cint): cint
+proc readBytes*(handle: ptr PHYSFS_File, buffer: ptr UncheckedArray[byte], len: uint64): int64
+proc writeBytes*(handle: ptr PHYSFS_File, buffer: ptr UncheckedArray[byte], len: uint64): int64
+proc mountMemory*(buff: ptr UncheckedArray[byte], length:int64, del:Option[pointer], newDir:cstring, mountPoint:cstring, appendToPath:cint): cint
 {.pop.}
 
 # wrappers to make things more nim-ish & easier
@@ -40,16 +40,17 @@ proc exists*(filename:string): bool =
 proc mount*(newDir: string, mountPoint: string, appendToPath:bool): bool =
   return mount(cstring newDir, cstring mountPoint, (if appendToPath: 1 else: 0)) == 1
 
-proc mountMemory*(buff: var string, newDir:string, mountPoint:string, appendToPath:bool): bool =
-  return mountMemory(addr buff, buff.len, none(pointer), cstring newDir, cstring mountPoint, (if appendToPath: 1 else: 0)) == 1
+proc mountMemory*(buff: ptr UncheckedArray[byte], length:int64, newDir:string, mountPoint:string, appendToPath:bool): bool =
+  return mountMemory(buff, length, none(pointer), cstring newDir, cstring mountPoint, (if appendToPath: 1 else: 0)) == 1
 
-proc read*(filename:string): pointer =
-  if not exists("assets/logo-white.png"):
+proc read*(filename:string): ptr UncheckedArray[byte] =
+  if not exists(filename):
     return 
   var f = openRead(filename)
   var l = uint64 f.fileLength
-  var buffer:pointer = alloc(l)
+  var buffer = cast[ptr UncheckedArray[byte]](alloc(l))
   var b = uint64 f.readBytes(buffer, l)
   f.close()
   if b == l:
     return buffer
+

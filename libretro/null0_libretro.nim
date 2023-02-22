@@ -1,6 +1,7 @@
 import bitops
 import std/terminal
 import libretro
+import ../src/physfs
 import ../src/pntr
 import ../src/null0_lib
 
@@ -88,6 +89,7 @@ proc retro_load_game*(info: ptr retro_game_info): bool {.cdecl,exportc,dynlib.} 
   if not environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, addr fmt):
     log_cb(RETRO_LOG_INFO, "XRGB8888 is not supported.")
     return false
+  discard physfs.init($info.path)
   cartLoad($info.path)
   return true
 

@@ -23,7 +23,6 @@ suite "Physfs":
     check mount("graphics.null0", "", true)
     var b = read("assets/logo-white.png")
     discard deinit()
-    echo string(b)
 
 
 suite "Cart Utils":
@@ -38,6 +37,13 @@ suite "Cart Utils":
     let z = readFile("justlog.null0")
     check isWasm(w)
     check isWasm(z) != true
+
+  test "isWasm in zip":
+    check init("test")
+    check mount("graphics.null0", "", true)
+    var b = read("main.wasm")
+    check isWasm(b)
+    discard deinit()
 
 suite "wasm (justlog)":
   test "Setup log hook function and call it":
