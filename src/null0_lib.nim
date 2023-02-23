@@ -120,6 +120,8 @@ proc null0Import_load_font_ttffont(runtime: PRuntime; ctx: PImportContext; sp: p
     var bytes = physfs.read($filename)
     var dataSize = cuint fileLength($filename)
     null0_fonts[destination] = pntr.load_ttffont_from_memory(bytes, dataSize, fontSize, fontColor)
+    var err = get_error()
+    echo err
   var sp = sp.stackPtrToUint()
   callHost(loadTtfFontProcImpl, sp, mem)
 
