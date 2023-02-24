@@ -4,6 +4,7 @@ import physfs
 import wasm3
 import wasm3/wasm3c
 import pntr
+import std/strformat
 
 # TODO: figure out a way to enable with build-flag (for libretro) and not just CLI param
 var allowNetwork* = false
@@ -119,6 +120,7 @@ proc null0Import_load_font_ttffont(runtime: PRuntime; ctx: PImportContext; sp: p
   proc loadTtfFontProcImpl(destination: uint8, filename: cstring, fontSize: cint, fontColor: pntr_color) =
     var bytes = physfs.read($filename)
     var dataSize = cuint fileLength($filename)
+    echo fmt"load_font_ttffont({destination}, {filename}, {fontSize}, {fontColor}): {dataSize}"
     null0_fonts[destination] = pntr.load_ttffont_from_memory(bytes, dataSize, fontSize, fontColor)
     var err = get_error()
     echo err

@@ -13,6 +13,9 @@ requires "https://github.com/notnullgames/pntr-nim.git"
 
 import os
 
+task debug, "Build and run a debug version of CLI host":
+  selfExec("c -d:debug --debugger:native --outDir=. src/null0.nim ")
+
 task clean, "Clean built files":
   for file in listFiles("."):
     let s = splitFile(file)
@@ -21,7 +24,7 @@ task clean, "Clean built files":
       rmFile(file)
 
 task libretro, "Build libretro host":
-  selfExec("c -d:debug --app:lib --noMain --gc:orc --outDir=. libretro/null0_libretro.nim")
+  selfExec("c -d:release --app:lib --noMain --gc:orc --outDir=. libretro/null0_libretro.nim")
 
 task cart, "Build a demo cart":
   let name = paramStr(paramCount())
