@@ -30,13 +30,23 @@ suite "Pntr":
     let font = load_bmfont("./carts/fonts/assets/bmfont.png", " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/")
     let canvas = gen_image_color(320, 240, BLACK)
     draw_text(canvas, font, "Hello World", 120, 100)
-    save_image(canvas, "test-bm.png")
+    save_image(canvas, "test-bm-file.png")
 
-  test "TTF from file":
-    let font = load_ttffont("./carts/fonts/assets/tuffy.ttf", 20, WHITE)
+  test "BM Font from memory":
+    check init("test")
+    check mount("fonts.null0", "", true)
+    var b = read("/assets/bmfont.png")
+    let font = load_bmfont_from_memory(b.data, cuint b.length, " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/")
     let canvas = gen_image_color(320, 240, BLACK)
     draw_text(canvas, font, "Hello World", 120, 100)
-    save_image(canvas, "test-ttf.png")
+    save_image(canvas, "test-bm-mem.png")
+    discard deinit()
+
+  test "TTF from file":
+    let font = load_ttffont("./vendor/pntr/examples/resources/tuffy.ttf", 20, WHITE)
+    let canvas = gen_image_color(320, 240, BLACK)
+    draw_text(canvas, font, "Hello World", 120, 100)
+    save_image(canvas, "test-ttf-file.png")
 
   test "TTF from memory":
     check init("test")
@@ -46,6 +56,7 @@ suite "Pntr":
     let canvas = gen_image_color(320, 240, BLACK)
     draw_text(canvas, font, "Hello World", 120, 100)
     save_image(canvas, "test-ttf-mem.png")
+    discard deinit()
 
 
 suite "Cart Utils":

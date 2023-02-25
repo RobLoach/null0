@@ -24,9 +24,9 @@ proc openRead*(filename: cstring): ptr PHYSFS_File
 proc exists*(name: cstring): int
 proc close*(handle: ptr PHYSFS_File): void
 proc fileLength*(handle: ptr PHYSFS_File): int64
-proc readBytes*(handle: ptr PHYSFS_File, buffer: ptr UncheckedArray[byte], len: uint64): int64
-proc writeBytes*(handle: ptr PHYSFS_File, buffer: ptr UncheckedArray[byte], len: uint64): int64
-proc mountMemory*(buff: ptr UncheckedArray[byte], length:int64, del:Option[pointer], newDir:cstring, mountPoint:cstring, appendToPath:cint): cint
+proc readBytes*(handle: ptr PHYSFS_File, buffer: pointer, len: uint64): int64
+proc writeBytes*(handle: ptr PHYSFS_File, buffer: pointer, len: uint64): int64
+proc mountMemory*(buff: pointer, length:int64, del:Option[pointer], newDir:cstring, mountPoint:cstring, appendToPath:cint): cint
 {.pop.}
 
 type
