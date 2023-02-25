@@ -3,14 +3,40 @@
 # ideas from https://github.com/fowlmouth/physfs
 # see here for more ideas: https://github.com/treeform/staticglfw/blob/master/src/staticglfw.nim#L4-L88
 
-import std/options
+{.emit: """
+#define PHYSFS_SUPPORTS_ZIP 1
+""".}
 
-# TODO: look into not having to have physfs installed globally (see pntr or wasm3 wrapper)
+{.compile: "vendor/physfs/src/physfs.c".}
+{.compile: "vendor/physfs/src/physfs_byteorder.c".}
+{.compile: "vendor/physfs/src/physfs_unicode.c".}
+{.compile: "vendor/physfs/src/physfs_platform_posix.c".}
+{.compile: "vendor/physfs/src/physfs_platform_unix.c".}
+{.compile: "vendor/physfs/src/physfs_platform_windows.c".}
+{.compile: "vendor/physfs/src/physfs_platform_os2.c".}
+{.compile: "vendor/physfs/src/physfs_platform_qnx.c".}
+{.compile: "vendor/physfs/src/physfs_platform_android.c".}
+
 when defined(macosx):
-  {.passL: "-lphysfs".}
-when defined(linux):
-  {.passL: "-lphysfs".}
+  {.compile: "vendor/physfs/src/physfs_platform_apple.m".}
+  {.passL: "-framework IOKit -framework Foundation".}
 
+{.compile: "vendor/physfs/src/physfs_archiver_dir.c".}
+{.compile: "vendor/physfs/src/physfs_archiver_zip.c".}
+{.compile: "vendor/physfs/src/physfs_archiver_unpacked.c".}
+{.compile: "vendor/physfs/src/physfs_archiver_grp.c".}
+{.compile: "vendor/physfs/src/physfs_archiver_hog.c".}
+{.compile: "vendor/physfs/src/physfs_archiver_7z.c".}
+{.compile: "vendor/physfs/src/physfs_archiver_mvl.c".}
+{.compile: "vendor/physfs/src/physfs_archiver_qpak.c".}
+{.compile: "vendor/physfs/src/physfs_archiver_wad.c".}
+{.compile: "vendor/physfs/src/physfs_archiver_slb.c".}
+{.compile: "vendor/physfs/src/physfs_archiver_iso9660.c".}
+{.compile: "vendor/physfs/src/physfs_archiver_vdf.c".}
+
+
+
+import std/options
 
 type 
   PHYSFS_File* {.pure, final.} = object 

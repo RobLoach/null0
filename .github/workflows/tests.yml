@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup Host
-        run: sudo apt update && sudo apt install -y libphysfs-dev emscripten
+        run: sudo apt update && sudo apt install -y emscripten
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -26,10 +26,12 @@ jobs:
         run: nimble carts
       - name: Run unit-tests
         run: nimble test
+      
       - name: Build Libretro - Linux x86_64
         run: nimble libretro && mv libnull0_libretro.so null0_libretro.so && zip libretro-linux-x86_64.zip -r null0_libretro.so
       - name: Build Runtime - Linux x86_64
         run: nimble runtime && zip runtime-linux-x86_64.zip -r null0
+      
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
