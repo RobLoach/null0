@@ -12,7 +12,7 @@ suite "Pntr":
     pntr.save_image(canvas, "test-gradient-vert.png")
 
   test "BM Font from file":
-    let font = pntr.load_bmfont("./carts/fonts/assets/bmfont.png", " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/")
+    let font = pntr.load_bmfont("./vendor/pntr/examples/resources/bmfont.png", " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/")
     let canvas = pntr.gen_image_color(320, 240, BLACK)
     pntr.draw_text(canvas, font, "Hello World", 120, 100)
     pntr.save_image(canvas, "test-bm-file.png")
