@@ -8,8 +8,9 @@ requires "nim >= 1.6.10"
 requires "https://github.com/beef331/wasm3 >= 0.1.7"
 requires "docopt >= 0.7.0"
 
-import os
-import strutils
+import std/os
+import std/strutils
+import std/strformat
 
 task clean, "Clean built files":
   for file in listFiles("tests"):
@@ -32,7 +33,7 @@ task libretro, "Build libretro host":
 task cart, "Build a demo cart":
   let name = paramStr(paramCount())
   let dir = "src/carts/" & name
-  exec("cd " & dir & " && nim c main.nim && zip ../../../" & name & ".null0 -r main.wasm assets/ && mv main.wasm ../../../" & name & ".wasm")
+  exec(fmt"cd {dir} && nim c main.nim && zip ../../../{name}.null0 -r main.wasm assets/ && mv main.wasm ../../../{name}.wasm")
 
 task carts, "Builds all demo carts":
   for dir in listDirs("src/carts"):
