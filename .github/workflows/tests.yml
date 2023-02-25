@@ -8,9 +8,23 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-      - run: sudo apt update && sudo apt install -y libphysfs-dev emscripten
-      - uses: actions/checkout@v2
-      - uses: iffy/install-nim@v4
-      - run: nimble install -y
-      - run: nimble carts
-      - run: nimble test
+      - name: Setup Host
+        run: sudo apt update && sudo apt install -y libphysfs-dev emscripten
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Nim
+        uses: iffy/install-nim@v4
+      - name: Build Carts
+        run: nimble carts
+      - name: Run unit-tests
+        run: nimble test
+      - name: Build Libretro - Linux x86_64
+        run: nimble libretro && mv libnull0_libretro.so null0_libretro.so && zip libretro-linux-x86_64.zip -r null0_libretro.so
+        run: nimble carts
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            *.null0
+            libretro-linux-x86_64.zip
