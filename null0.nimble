@@ -2,6 +2,7 @@ version       = "0.0.1"
 author        = "David Konsumer"
 description   = "Null0 Game runtime"
 license       = "AAL"
+skipDirs = @["tests", "carts", "libretro", "src"]
 
 requires "nim >= 1.6.10"
 requires "https://github.com/beef331/wasm3 >= 0.1.7"
