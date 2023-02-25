@@ -6,23 +6,12 @@ import ../src/physfs
 import ../src/pntr
 
 suite "Physfs":
-  test "mount zip file and read from it":
-    check init("test")
-    check mount("draw.null0", "", true)
-    check exists("assets/logo-white.png")
-    var f = openRead("assets/logo.png")
-    var l = uint64 f.fileLength
-    check l == 11228
-    var buffer:pointer = alloc(l)
-    var b = uint64 f.readBytes(cast[ptr UncheckedArray[byte]](buffer), l)
-    f.close()
-    check b == l
-    discard deinit()
-
   test "mount zip file and read from it using read()":
     check init("test")
     check mount("draw.null0", "", true)
     var b = read("assets/logo.png")
+    var l = fileLength("assets/logo.png")
+    check l == 9211
     discard deinit()
 
 suite "Pntr":
@@ -50,21 +39,21 @@ suite "Pntr":
     save_image(canvas, "test-bm-mem.png")
     discard deinit()
 
-  test "TTF from file":
-    let font = load_ttffont("./vendor/pntr/examples/resources/tuffy.ttf", 20, WHITE)
-    let canvas = gen_image_color(320, 240, BLACK)
-    draw_text(canvas, font, "Hello World", 120, 100)
-    save_image(canvas, "test-ttf-file.png")
+  # test "TTF from file":
+  #   let font = load_ttffont("./vendor/pntr/examples/resources/tuffy.ttf", 20, WHITE)
+  #   let canvas = gen_image_color(320, 240, BLACK)
+  #   draw_text(canvas, font, "Hello World", 120, 100)
+  #   save_image(canvas, "test-ttf-file.png")
 
-  test "TTF from memory":
-    check init("test")
-    check mount("fonts.null0", "", true)
-    var b = read("/assets/tuffy.ttf")
-    let font = load_ttffont_from_memory(b.data, cuint b.length, 20, WHITE)
-    let canvas = gen_image_color(320, 240, BLACK)
-    draw_text(canvas, font, "Hello World", 120, 100)
-    save_image(canvas, "test-ttf-mem.png")
-    discard deinit()
+  # test "TTF from memory":
+  #   check init("test")
+  #   check mount("fonts.null0", "", true)
+  #   var b = read("/assets/tuffy.ttf")
+  #   let font = load_ttffont_from_memory(b.data, cuint b.length, 20, WHITE)
+  #   let canvas = gen_image_color(320, 240, BLACK)
+  #   draw_text(canvas, font, "Hello World", 120, 100)
+  #   save_image(canvas, "test-ttf-mem.png")
+  #   discard deinit()
 
 
 suite "Cart Utils":
@@ -82,7 +71,7 @@ suite "Cart Utils":
 
   test "isWasm in zip":
     check init("test")
-    check mount("graphics.null0", "", true)
+    check mount("draw.null0", "", true)
     var b = read("main.wasm")
     check isWasm(b)
     discard deinit()

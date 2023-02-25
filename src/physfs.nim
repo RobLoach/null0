@@ -48,6 +48,13 @@ proc mount*(newDir: string, mountPoint: string, appendToPath:bool): bool =
 proc mountMemory*(buff: ptr UncheckedArray[byte], length:int64, newDir:string, mountPoint:string, appendToPath:bool): bool =
   return mountMemory(buff, length, none(pointer), cstring newDir, cstring mountPoint, (if appendToPath: 1 else: 0)) == 1
 
+proc fileLength*(filename:string): uint64 = 
+  if not exists(filename):
+    return
+  var f = openRead(filename)
+  var l = uint64 f.fileLength
+  return l
+
 proc read*(filename:string): FileData =
   if not exists(filename):
     return 
