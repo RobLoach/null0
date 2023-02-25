@@ -8,9 +8,9 @@ import ../src/pntr
 suite "Physfs":
   test "mount zip file and read from it":
     check init("test")
-    check mount("graphics.null0", "", true)
+    check mount("draw.null0", "", true)
     check exists("assets/logo-white.png")
-    var f = openRead("assets/logo-white.png")
+    var f = openRead("assets/logo.png")
     var l = uint64 f.fileLength
     check l == 11228
     var buffer:pointer = alloc(l)
@@ -21,8 +21,8 @@ suite "Physfs":
 
   test "mount zip file and read from it using read()":
     check init("test")
-    check mount("graphics.null0", "", true)
-    var b = read("assets/logo-white.png")
+    check mount("draw.null0", "", true)
+    var b = read("assets/logo.png")
     discard deinit()
 
 suite "Pntr":
