@@ -7,8 +7,6 @@ skipDirs = @["tests", "carts", "libretro", "src"]
 requires "nim >= 1.6.10"
 requires "https://github.com/beef331/wasm3 >= 0.1.7"
 requires "docopt >= 0.7.0"
-requires "https://github.com/treeform/print.git >= 1.0.2"
-requires "https://github.com/notnullgames/pntr-nim.git"
 
 import os
 import strutils
@@ -25,10 +23,10 @@ task clean, "Clean built files":
       rmFile(file)
 
 task runtime, "Build standalone runtime":
-  selfExec("c -d:release  --outDir=. -o:null0 src/runtime.nim")
+  selfExec("c --panics:on -d:release  --outDir=. -o:null0 src/runtime.nim")
 
 task libretro, "Build libretro host":
-  selfExec("c -d:release --app:lib --noMain --gc:orc --outDir=. libretro/null0_libretro.nim")
+  selfExec("c --panics:on -d:release --app:lib --noMain --gc:orc --outDir=. src/null0_libretro.nim")
 
 # TODO: this will only work on linux/mac
 task cart, "Build a demo cart":

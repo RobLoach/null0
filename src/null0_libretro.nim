@@ -1,9 +1,10 @@
 import bitops
 import std/terminal
-import libretro
-import ../src/null0/physfs
-import ../src/null0/pntr
-import ../src/null0/null0
+
+import null0/libretro
+import null0/physfs
+import null0/pntr
+import null0/null0
 
 const WIDTH = 320
 const HEIGHT = 240 

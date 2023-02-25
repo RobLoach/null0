@@ -21,10 +21,13 @@ nimble install -d
 # build null0 standalone runtime
 nimble runtime
 
-# build example carts
+# build all example carts
 nimble carts
 
-# run unit-tests to play with ideas
+# build justlog example cart
+nimble cart justlog
+
+# run unit-tests to play with ideas (run nimble carts, first)
 nimble test
 
 # build null0 libretro core
