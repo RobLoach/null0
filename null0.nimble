@@ -31,10 +31,10 @@ task libretro, "Build libretro host":
 # TODO: this will only work on linux/mac
 task cart, "Build a demo cart":
   let name = paramStr(paramCount())
-  let dir = "carts/" & name
-  exec("cd " & dir & " && nim c main.nim && zip ../../" & name & ".null0 -r main.wasm assets/ && mv main.wasm ../../" & name & ".wasm")
+  let dir = "src/carts/" & name
+  exec("cd " & dir & " && nim c main.nim && zip ../../../" & name & ".null0 -r main.wasm assets/ && mv main.wasm ../../../" & name & ".wasm")
 
 task carts, "Builds all demo carts":
-  for dir in listDirs("carts"):
+  for dir in listDirs("src/carts"):
     let (parent, name, ext) = os.splitFile(dir)
     exec("nimble cart " & name)
