@@ -39,11 +39,11 @@ suite "Pntr":
     save_image(canvas, "test-bm-mem.png")
     discard deinit()
 
-  # test "TTF from file":
-  #   let font = load_ttffont("./vendor/pntr/examples/resources/tuffy.ttf", 20, WHITE)
-  #   let canvas = gen_image_color(320, 240, BLACK)
-  #   draw_text(canvas, font, "Hello World", 120, 100)
-  #   save_image(canvas, "test-ttf-file.png")
+  test "TTF from file":
+    let font = load_ttffont("./vendor/pntr/examples/resources/tuffy.ttf", 20, WHITE)
+    let canvas = gen_image_color(320, 240, BLACK)
+    draw_text(canvas, font, "Hello World", 120, 100)
+    save_image(canvas, "test-ttf-file.png")
 
   # test "TTF from memory":
   #   check init("test")
