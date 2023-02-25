@@ -9,7 +9,7 @@ PNTR_LOAD_FILE macro should match, for easier physfs
 unsigned char* pntr_load_file(const char *fileName, unsigned int *bytesRead);
 */
 
-#include "../vendor/pntr/pntr.h"
+#include "pntr/pntr.h"
 """.}
 
 const PNTR_MAX_FONTS* = 256
