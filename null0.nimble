@@ -24,7 +24,7 @@ task clean, "Clean built files":
       rmFile(file)
 
 task runtime, "Build standalone runtime":
-  selfExec("c --panics:on -d:release  --outDir=. -o:null0 src/runtime.nim")
+  selfExec("c --panics:on -d:release  --outDir=. -o:null0 src/null0_runtime.nim")
 
 task libretro, "Build libretro host":
   selfExec("c --panics:on -d:release --app:lib --noMain --gc:orc --outDir=. src/null0_libretro.nim")
