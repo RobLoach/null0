@@ -1,8 +1,8 @@
 import unittest
 import wasm3
 import wasm3/wasm3c
-import ../src/null0_lib
-import ../src/physfs
+import ../src/null0/null0
+import ../src/null0/physfs
 
 
 suite "Null0: Cart Utils":

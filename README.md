@@ -19,7 +19,7 @@ Now you can do some stuff:
 nimble install -d
 
 # build null0 standalone runtime
-nimble build
+nimble runtime
 
 # build example carts
 nimble carts

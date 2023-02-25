@@ -1,5 +1,5 @@
 import unittest
-import ../src/physfs
+import ../src/null0/physfs
 
 suite "Physfs":
   test "mount zip file and read from it using read()":

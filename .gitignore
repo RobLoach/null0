@@ -2,7 +2,7 @@
 /null0
 *.null0
 *.wasm
-tests/test1
+tests/test_null0
 *.so
 *.dylib
 *.dll

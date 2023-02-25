@@ -1,6 +1,6 @@
 import unittest
-import ../src/pntr
-import ../src/physfs
+import ../src/null0/pntr
+import ../src/null0/physfs
 
 suite "Pntr: Gradients":
   test "Horizontal":

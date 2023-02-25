@@ -2,8 +2,6 @@ version       = "0.0.1"
 author        = "David Konsumer"
 description   = "Null0 Game runtime"
 license       = "AAL"
-srcDir        = "src"
-bin           = @["null0"]
 
 requires "nim >= 1.6.10"
 requires "https://github.com/beef331/wasm3 >= 0.1.7"
@@ -13,9 +11,6 @@ requires "https://github.com/notnullgames/pntr-nim.git"
 
 import os
 import strutils
-
-task debug, "Build and run a debug version of CLI host":
-  selfExec("c -d:debug --debugger:native --outDir=. src/null0.nim ")
 
 task clean, "Clean built files":
   for file in listFiles("./tests"):
@@ -28,9 +23,13 @@ task clean, "Clean built files":
       echo "Deleting ", file
       rmFile(file)
 
+task runtime, "Build standalone runtime":
+  selfExec("c -d:release  --outDir=. -o:null0 src/runtime.nim")
+
 task libretro, "Build libretro host":
   selfExec("c -d:release --app:lib --noMain --gc:orc --outDir=. libretro/null0_libretro.nim")
 
+# TODO: this will only work on linux/mac
 task cart, "Build a demo cart":
   let name = paramStr(paramCount())
   let dir = "carts/" & name
