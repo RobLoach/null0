@@ -20,6 +20,8 @@ jobs:
         run: nimble test
       - name: Build Libretro - Linux x86_64
         run: nimble libretro && mv libnull0_libretro.so null0_libretro.so && zip libretro-linux-x86_64.zip -r null0_libretro.so
+      - name: Build Runtime - Linux x86_64
+        run: nimble runtime && zip runtime-linux-x86_64.zip -r null0
         run: nimble carts
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -27,4 +29,4 @@ jobs:
         with:
           files: |
             *.null0
-            libretro-linux-x86_64.zip
+            *-*-*.zip
