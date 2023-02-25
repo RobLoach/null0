@@ -21,6 +21,9 @@ when defined(macosx):
   {.compile: "vendor/physfs/src/physfs_platform_apple.m".}
   {.passL: "-framework IOKit -framework Foundation".}
 
+when defined(linux):
+  {.passL: "-lpthread".}
+
 {.compile: "vendor/physfs/src/physfs_archiver_dir.c".}
 {.compile: "vendor/physfs/src/physfs_archiver_zip.c".}
 {.compile: "vendor/physfs/src/physfs_archiver_unpacked.c".}
