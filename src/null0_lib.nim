@@ -95,29 +95,29 @@ proc null0Import_image_copy(runtime: PRuntime; ctx: PImportContext; sp: ptr uint
 proc null0Import_load_image(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc loadImageProcImpl(destination: uint8, filename: cstring) =
     var f = physfs.read($filename)
-    null0_images[destination] = pntr.load_image_from_memory(f.data, f.length)
+    null0_images[destination] = pntr.load_image_from_memory(f.data, cuint f.length)
   var sp = sp.stackPtrToUint()
   callHost(loadImageProcImpl, sp, mem)
 
 proc null0Import_load_font_bmfont(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc loadBmFontProcImpl(destination: uint8, filename: cstring, characters: cstring) =
     var f = physfs.read($filename)
-    null0_fonts[destination] = pntr.load_bmfont_from_memory(f.data, f.length, characters)
+    null0_fonts[destination] = pntr.load_bmfont_from_memory(f.data, cuint f.length, characters)
   var sp = sp.stackPtrToUint()
   callHost(loadBmFontProcImpl, sp, mem)
 
 proc null0Import_load_font_ttyfont(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc loadTtyFontProcImpl(destination: uint8, filename: cstring, glyphWidth: cint, glyphHeight: cint, characters: cstring) =
     var f = physfs.read($filename)
-    null0_fonts[destination] = pntr.load_ttyfont_from_memory(f.data, f.length, glyphWidth, glyphHeight, characters)
+    null0_fonts[destination] = pntr.load_ttyfont_from_memory(f.data, cuint f.length, glyphWidth, glyphHeight, characters)
   var sp = sp.stackPtrToUint()
   callHost(loadTtyFontProcImpl, sp, mem)
 
 proc null0Import_load_font_ttffont(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc loadTtfFontProcImpl(destination: uint8, filename: cstring, fontSize: cint, fontColor: pntr_color) =
     var f = physfs.read($filename)
-    echo fmt"load_font_ttffont({destination}, {filename}, {fontSize}, {fontColor}): {dataSize}"
-    null0_fonts[destination] = pntr.load_ttffont_from_memory(f.data, f.length, fontSize, fontColor)
+    echo fmt"load_font_ttffont({destination}, {filename}, {fontSize}, {fontColor}): {f.length}"
+    null0_fonts[destination] = pntr.load_ttffont_from_memory(f.data, cuint f.length, fontSize, fontColor)
     var err = get_error()
     echo err
   var sp = sp.stackPtrToUint()
@@ -141,6 +141,14 @@ proc isZip*(bytes: ptr UncheckedArray[byte]): bool =
   var b = cast[ptr array[4, byte]](bytes)
   return b[0] == 0x50 and b[1] == 0x4B and b[2] == 0x03 and b[3] == 0x04
 
+proc isWasm*(f:FileData): bool =
+  ## detect if some bytes (at least 4) are a wasm file
+  return isWasm(f.data)
+
+proc isZip*(f:FileData): bool =
+  ## detect if some bytes (at least 4) are a wasm file
+  return isZip(f.data)
+
 proc cartUpdate*(): void =
   ## call the update() funciton in cart
   if null0_export_update != nil:
@@ -151,10 +159,10 @@ proc cartUnload*(): void =
   if null0_export_unload != nil:
     null0_export_unload.call(void)
 
-proc cartLoad*(filename:string, data: ptr UncheckedArray[byte], length: uint64) = 
-  ## given a filename and some bytes, load a cart
+proc cartLoad*(file:FileData) = 
+  ## given a (loaded) file-object, load a cart
 
-  if not isWasm(data):
+  if not isWasm(file.data):
     echo "Cart is not valid (wasm bytes.)"
     return
 
@@ -165,7 +173,7 @@ proc cartLoad*(filename:string, data: ptr UncheckedArray[byte], length: uint64) 
   var runtime = env.m3_NewRuntime(uint16.high.uint32, nil)
   var module: PModule
 
-  checkWasmRes m3_ParseModule(env, module.addr, cast[ptr uint8](data), uint32 length)
+  checkWasmRes m3_ParseModule(env, module.addr, cast[ptr uint8](file.data), uint32 file.length)
   checkWasmRes m3_LoadModule(runtime, module)
   checkWasmRes m3LinkWasi(module)
   
@@ -267,32 +275,30 @@ proc cartLoad*(filename: string): void =
       echo "No main.wasm in " & filename
       return
     let data = physfs.read("main.wasm")
-    var f = physfs.openRead("main.wasm")
-    var l = uint64 f.fileLength
-    f.close()
-    cartLoad(filename, data, l)
+    cartLoad(data)
   else:
     if not os.fileExists(filename):
       echo "Could not find " & filename
       return
-    var l = os.getFileSize(filename)
-    var data = cast[ptr UncheckedArray[byte]](alloc(l))
+    
+    let l = uint64 os.getFileSize(filename)
+    var data = FileData(
+      length: l,
+      data: cast[ptr UncheckedArray[byte]](alloc(l))
+    )
     var f = system.open(filename)
-    discard system.readBuffer(f, data, l)
-    f.close()
+    discard system.readBuffer(f, data.data, data.length)
+
     if (isWasm(data)):
-      cartLoad(filename, data, uint64 l)
+      cartLoad(data)
     elif isZip(data):
-      if not physfs.mountMemory(data, l, filename, "", true):
+      if not physfs.mountMemory(data.data, int64 data.length, filename, "", true):
         echo "Could not mount " & filename
         return
       if not physfs.exists("main.wasm"):
         echo "No main.wasm in " & filename
         return
       let data = physfs.read("main.wasm")
-      var f = physfs.openRead("main.wasm")
-      var l = uint64 f.fileLength
-      f.close()
-      cartLoad(filename, data, l)
+      cartLoad(data)
     else:
       echo "Invalid cart (not a wasm or zip file.)"
