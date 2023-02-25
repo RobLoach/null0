@@ -12,8 +12,8 @@ import os
 import strutils
 
 task clean, "Clean built files":
-  for file in listFiles("./tests"):
-    if file.startsWith("./tests/test") and not file.endsWith(".nim"):
+  for file in listFiles("tests"):
+    if file.startsWith("tests/test_") and not file.endsWith(".nim"):
       echo "Deleting ", file
       rmFile(file)
   for file in listFiles("."):
