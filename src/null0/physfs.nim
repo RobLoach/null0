@@ -24,6 +24,8 @@ when defined(macosx):
 when defined(linux):
   {.passL: "-lpthread".}
 
+# TODO: probly need some platform-specific stuff for windows
+
 {.compile: "vendor/physfs/src/physfs_archiver_dir.c".}
 {.compile: "vendor/physfs/src/physfs_archiver_zip.c".}
 {.compile: "vendor/physfs/src/physfs_archiver_unpacked.c".}

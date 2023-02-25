@@ -168,6 +168,10 @@ proc cartUnload*(): void =
   ## call the unload() funciton in cart
   if null0_export_unload != nil:
     null0_export_unload.call(void)
+  # for image in null0_images:
+  #   pntr.unload_image(image)
+  # for font in null0_fonts:
+  #   pntr.unload_font(font)
 
 proc cartLoad*(file:FileData) = 
   ## given a (loaded) file-object, load a cart
