@@ -124,14 +124,15 @@ proc null0Import_load_font_ttyfont(runtime: PRuntime; ctx: PImportContext; sp: p
   callHost(procImpl, sp, mem)
 
 proc null0Import_load_font_ttffont(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
-  proc loadTtfFontProcImpl(destination: uint8, filename: cstring, fontSize: cint, fontColor: pntr_color) =
+  proc procImpl(destination: uint8, filename: cstring, fontSize: cint, fontColor: pntr_color) =
     var f = physfs.read($filename)
     echo fmt"load_font_ttffont({destination}, {filename}, {fontSize}, {fontColor}): {f.length}"
     null0_fonts[destination] = pntr.load_ttffont_from_memory(f.data, cuint f.length, fontSize, fontColor)
+    dealloc(f.data)
     var err = get_error()
     echo err
   var sp = sp.stackPtrToUint()
-  callHost(loadTtfFontProcImpl, sp, mem)
+  callHost(procImpl, sp, mem)
 
 proc isZip*(bytes: string): bool =
   ## detect if some bytes (at least 4) are a zip file
@@ -169,9 +170,13 @@ proc cartUnload*(): void =
   if null0_export_unload != nil:
     null0_export_unload.call(void)
   for image in null0_images:
-    pntr.unload_image(image)
+    if image != nil:
+      # echo image[]
+      pntr.unload_image(image)
   for font in null0_fonts:
-    pntr.unload_font(font)
+    if font != nil:
+      # echo font[]
+      pntr.unload_font(font)
 
 proc cartLoad*(file:FileData) = 
   ## given a (loaded) file-object, load a cart
