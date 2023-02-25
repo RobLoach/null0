@@ -86,6 +86,18 @@ proc load_font_ttf*(filename: cstring, fontSize: cint, fontColor: Color): uint8 
   load_font_ttf(currentFont, filename, fontSize, fontColor)
   return currentFont
 
+proc gradient_vertical*(destination: uint8, width: cint, height: cint, top: Color, bottom: Color){.importc, cdecl.}
+proc gradient_vertical*(width: cint, height: cint, top: Color, bottom: Color): uint8 =
+  currentImage = currentImage + 1
+  gradient_vertical(currentImage, width, height, top, bottom)
+  return currentImage
+
+proc gradient_horizontal*(destination: uint8, width: cint, height: cint, left: Color, right: Color){.importc, cdecl.}
+proc gradient_horizontal*(width: cint, height: cint, left: Color, right: Color): uint8 =
+  currentImage = currentImage + 1
+  gradient_horizontal(currentImage, width, height, left, right)
+  return currentImage
+
 const LIGHTGRAY* = Color(r: 200, g: 200, b: 200, a: 255)
 const GRAY* = Color(r: 130, g: 130, b: 130, a: 255)
 const DARKGRAY* = Color(r: 80, g: 80, b: 80, a: 255)

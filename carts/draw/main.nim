@@ -1,13 +1,15 @@
 import ../null0
 
 var logo:uint8
+var grad:uint8
 
 proc load() {.null0.} =
   log("Hello from draw.")
   logo = load_image("assets/logo.png")
+  grad = gradient_vertical(320, 240, RED, BLUE)
 
 proc update() {.null0.} =
-  clear_background(BLACK)
+  draw_image(grad, 0, 0)
   draw_circle(160, 120, 100, YELLOW)
   draw_circle(120, 100, 20, BLACK)
   draw_circle(200, 100, 20, BLACK)

@@ -34,10 +34,10 @@ proc fromWasm*(result: var ptr pntr_font, sp: var uint64, mem: pointer) =
   result = null0_fonts[d]
 
 proc null0Import_log(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
-  proc logProcImpl(c: cstring) =
+  proc procImpl(c: cstring) =
     echo c
   var sp = sp.stackPtrToUint()
-  callHost(logProcImpl, sp, mem)
+  callHost(procImpl, sp, mem)
 
 proc null0Import_clear_background(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   var sp = sp.stackPtrToUint()
@@ -73,45 +73,55 @@ proc null0Import_image_crop(runtime: PRuntime; ctx: PImportContext; sp: ptr uint
 #   callHost(pntr.image_crop, sp, mem)
 
 proc null0Import_draw_image(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
-  proc drawImageProcImpl(dst: uint8, src: uint8, posX: cint, posY: cint) =
+  proc procImpl(dst: uint8, src: uint8, posX: cint, posY: cint) =
     pntr.draw_image(null0_images[dst], null0_images[src], posX, posY)
   var sp = sp.stackPtrToUint()
-  callHost(drawImageProcImpl, sp, mem)
+  callHost(procImpl, sp, mem)
 
 proc null0Import_draw_text(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
-  proc drawTextProcImpl(dst: uint8, font: uint8, text: cstring, posX: cint, posY: cint) =
+  proc procImpl(dst: uint8, font: uint8, text: cstring, posX: cint, posY: cint) =
     pntr.draw_text(null0_images[dst], null0_fonts[font], text, posX, posY)
   var sp = sp.stackPtrToUint()
-  callHost(drawTextProcImpl, sp, mem)
+  callHost(procImpl, sp, mem)
 
-# procs that load stuff need wrapping
+proc null0Import_gradient_vertical(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
+  proc procImpl(dst: uint8, width: cint; height: cint; top: pntr_color; bottom: pntr_color) =
+    null0_images[dst] = gen_image_gradient_vertical(width, height, top, bottom)
+  var sp = sp.stackPtrToUint()
+  callHost(procImpl, sp, mem)
+
+proc null0Import_gradient_horizontal(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
+  proc procImpl(dst: uint8, width: cint; height: cint; left: pntr_color; right: pntr_color) =
+    null0_images[dst] = gen_image_gradient_horizontal(width, height, left, right)
+  var sp = sp.stackPtrToUint()
+  callHost(procImpl, sp, mem)
 
 proc null0Import_image_copy(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
-  proc imageCopyProcImpl(destination: uint8, source: uint8): uint8 =
+  proc procImpl(destination: uint8, source: uint8): uint8 =
     null0_images[destination] = pntr.image_copy(null0_images[source])
   var sp = sp.stackPtrToUint()
-  callHost(imageCopyProcImpl, sp, mem)
+  callHost(procImpl, sp, mem)
 
 proc null0Import_load_image(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
-  proc loadImageProcImpl(destination: uint8, filename: cstring) =
+  proc procImpl(destination: uint8, filename: cstring) =
     var f = physfs.read($filename)
     null0_images[destination] = pntr.load_image_from_memory(f.data, cuint f.length)
   var sp = sp.stackPtrToUint()
-  callHost(loadImageProcImpl, sp, mem)
+  callHost(procImpl, sp, mem)
 
 proc null0Import_load_font_bmfont(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
-  proc loadBmFontProcImpl(destination: uint8, filename: cstring, characters: cstring) =
+  proc procImpl(destination: uint8, filename: cstring, characters: cstring) =
     var f = physfs.read($filename)
     null0_fonts[destination] = pntr.load_bmfont_from_memory(f.data, cuint f.length, characters)
   var sp = sp.stackPtrToUint()
-  callHost(loadBmFontProcImpl, sp, mem)
+  callHost(procImpl, sp, mem)
 
 proc null0Import_load_font_ttyfont(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
-  proc loadTtyFontProcImpl(destination: uint8, filename: cstring, glyphWidth: cint, glyphHeight: cint, characters: cstring) =
+  proc procImpl(destination: uint8, filename: cstring, glyphWidth: cint, glyphHeight: cint, characters: cstring) =
     var f = physfs.read($filename)
     null0_fonts[destination] = pntr.load_ttyfont_from_memory(f.data, cuint f.length, glyphWidth, glyphHeight, characters)
   var sp = sp.stackPtrToUint()
-  callHost(loadTtyFontProcImpl, sp, mem)
+  callHost(procImpl, sp, mem)
 
 proc null0Import_load_font_ttffont(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc loadTtfFontProcImpl(destination: uint8, filename: cstring, fontSize: cint, fontColor: pntr_color) =
@@ -240,6 +250,14 @@ proc cartLoad*(file:FileData) =
     discard
   try:
     checkWasmRes m3_LinkRawFunction(module, "*", "load_font_ttf", "v(i*ii)", null0Import_load_font_ttffont)
+  except WasmError:
+    discard
+  try:
+    checkWasmRes m3_LinkRawFunction(module, "*", "gradient_vertical", "v(iiiii)", null0Import_gradient_vertical)
+  except WasmError:
+    discard
+  try:
+    checkWasmRes m3_LinkRawFunction(module, "*", "gradient_horizontal", "v(iiiii)", null0Import_gradient_horizontal)
   except WasmError:
     discard
 
