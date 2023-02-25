@@ -14,9 +14,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup Nim
-        uses: iffy/install-nim@v4
+        uses: jiro4989/setup-nim-action@v1
+        with:
+          nim-version: '1.6.x'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Install Deps
-        run: nimble install -d
+        run: nimble install -d -y
       - name: Build Carts
         run: nimble carts
       - name: Run unit-tests
