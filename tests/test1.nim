@@ -3,6 +3,7 @@ import wasm3
 import wasm3/wasm3c
 import ../src/null0_lib
 import ../src/physfs
+import ../src/pntr
 
 suite "Physfs":
   test "mount zip file and read from it":
@@ -13,7 +14,7 @@ suite "Physfs":
     var l = uint64 f.fileLength
     check l == 11228
     var buffer:pointer = alloc(l)
-    var b = uint64 f.readBytes(buffer, l)
+    var b = uint64 f.readBytes(cast[ptr UncheckedArray[byte]](buffer), l)
     f.close()
     check b == l
     discard deinit()
@@ -23,6 +24,28 @@ suite "Physfs":
     check mount("graphics.null0", "", true)
     var b = read("assets/logo-white.png")
     discard deinit()
+
+suite "Pntr":
+  test "BM Font from file":
+    let font = load_bmfont("./carts/fonts/assets/bmfont.png", " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/")
+    let canvas = gen_image_color(320, 240, BLACK)
+    draw_text(canvas, font, "Hello World", 120, 100)
+    save_image(canvas, "test-bm.png")
+
+  test "TTF from file":
+    let font = load_ttffont("./carts/fonts/assets/tuffy.ttf", 20, WHITE)
+    let canvas = gen_image_color(320, 240, BLACK)
+    draw_text(canvas, font, "Hello World", 120, 100)
+    save_image(canvas, "test-ttf.png")
+
+  test "TTF from memory":
+    check init("test")
+    check mount("fonts.null0", "", true)
+    var b = read("/assets/tuffy.ttf")
+    let font = load_ttffont_from_memory(b.data, cuint b.length, 20, WHITE)
+    let canvas = gen_image_color(320, 240, BLACK)
+    draw_text(canvas, font, "Hello World", 120, 100)
+    save_image(canvas, "test-ttf-mem.png")
 
 
 suite "Cart Utils":

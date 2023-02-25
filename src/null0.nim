@@ -32,7 +32,7 @@ proc main() =
   cartUpdate()
 
   # take a screenshot
-  discard pntr.save_image(null0_images[0], "demo.png")
+  pntr.save_image(null0_images[0], "demo.png")
 
   cartUnload()
 

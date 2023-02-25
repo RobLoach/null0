@@ -8,3 +8,5 @@ tests/test1
 *.dll
 *.a
 demo.png
+test-*.png
+*.dSYM

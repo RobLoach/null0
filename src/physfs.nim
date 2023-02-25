@@ -29,6 +29,11 @@ proc writeBytes*(handle: ptr PHYSFS_File, buffer: ptr UncheckedArray[byte], len:
 proc mountMemory*(buff: ptr UncheckedArray[byte], length:int64, del:Option[pointer], newDir:cstring, mountPoint:cstring, appendToPath:cint): cint
 {.pop.}
 
+type
+  FileData* = object
+    length*: uint64
+    data*: ptr UncheckedArray[byte]
+
 # wrappers to make things more nim-ish & easier
 
 proc init*(name: string): bool =
@@ -43,13 +48,7 @@ proc mount*(newDir: string, mountPoint: string, appendToPath:bool): bool =
 proc mountMemory*(buff: ptr UncheckedArray[byte], length:int64, newDir:string, mountPoint:string, appendToPath:bool): bool =
   return mountMemory(buff, length, none(pointer), cstring newDir, cstring mountPoint, (if appendToPath: 1 else: 0)) == 1
 
-proc fileLength*(filename:string): uint64 =
-  var f = openRead(filename)
-  var l = uint64 f.fileLength
-  f.close()
-  return l
-
-proc read*(filename:string): ptr UncheckedArray[byte] =
+proc read*(filename:string): FileData =
   if not exists(filename):
     return 
   var f = openRead(filename)
@@ -58,5 +57,9 @@ proc read*(filename:string): ptr UncheckedArray[byte] =
   var b = uint64 f.readBytes(buffer, l)
   f.close()
   if b == l:
-    return buffer
+    var o = FileData(
+      length: l,
+      data: buffer
+    )
+    return o
 

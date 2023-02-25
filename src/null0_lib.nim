@@ -94,34 +94,30 @@ proc null0Import_image_copy(runtime: PRuntime; ctx: PImportContext; sp: ptr uint
 
 proc null0Import_load_image(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc loadImageProcImpl(destination: uint8, filename: cstring) =
-    var bytes = physfs.read($filename)
-    var dataSize = cuint fileLength($filename)
-    null0_images[destination] = pntr.load_image_from_memory(bytes, dataSize)
+    var f = physfs.read($filename)
+    null0_images[destination] = pntr.load_image_from_memory(f.data, f.length)
   var sp = sp.stackPtrToUint()
   callHost(loadImageProcImpl, sp, mem)
 
 proc null0Import_load_font_bmfont(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc loadBmFontProcImpl(destination: uint8, filename: cstring, characters: cstring) =
-    var bytes = physfs.read($filename)
-    var dataSize = cuint fileLength($filename)
-    null0_fonts[destination] = pntr.load_bmfont_from_memory(bytes, dataSize, characters)
+    var f = physfs.read($filename)
+    null0_fonts[destination] = pntr.load_bmfont_from_memory(f.data, f.length, characters)
   var sp = sp.stackPtrToUint()
   callHost(loadBmFontProcImpl, sp, mem)
 
 proc null0Import_load_font_ttyfont(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc loadTtyFontProcImpl(destination: uint8, filename: cstring, glyphWidth: cint, glyphHeight: cint, characters: cstring) =
-    var bytes = physfs.read($filename)
-    var dataSize = cuint fileLength($filename)
-    null0_fonts[destination] = pntr.load_ttyfont_from_memory(bytes, dataSize, glyphWidth, glyphHeight, characters)
+    var f = physfs.read($filename)
+    null0_fonts[destination] = pntr.load_ttyfont_from_memory(f.data, f.length, glyphWidth, glyphHeight, characters)
   var sp = sp.stackPtrToUint()
   callHost(loadTtyFontProcImpl, sp, mem)
 
 proc null0Import_load_font_ttffont(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc loadTtfFontProcImpl(destination: uint8, filename: cstring, fontSize: cint, fontColor: pntr_color) =
-    var bytes = physfs.read($filename)
-    var dataSize = cuint fileLength($filename)
+    var f = physfs.read($filename)
     echo fmt"load_font_ttffont({destination}, {filename}, {fontSize}, {fontColor}): {dataSize}"
-    null0_fonts[destination] = pntr.load_ttffont_from_memory(bytes, dataSize, fontSize, fontColor)
+    null0_fonts[destination] = pntr.load_ttffont_from_memory(f.data, f.length, fontSize, fontColor)
     var err = get_error()
     echo err
   var sp = sp.stackPtrToUint()
