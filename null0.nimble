@@ -12,14 +12,19 @@ requires "https://github.com/treeform/print.git >= 1.0.2"
 requires "https://github.com/notnullgames/pntr-nim.git"
 
 import os
+import strutils
 
 task debug, "Build and run a debug version of CLI host":
   selfExec("c -d:debug --debugger:native --outDir=. src/null0.nim ")
 
 task clean, "Clean built files":
+  for file in listFiles("./tests"):
+    if file.endsWith("test1"):
+      echo "Deleting ", file
+      rmFile(file)
   for file in listFiles("."):
     let s = splitFile(file)
-    if file == "./null0" or s.ext == ".dll" or s.ext == ".so" or s.ext == ".dylib" or s.ext == ".wasm" or s.ext == ".null0":
+    if file == "./null0" or file == "./demo.png" or (file.startsWith("./test-") and file.endsWith(".png")) or s.ext == ".dll" or s.ext == ".so" or s.ext == ".dylib" or s.ext == ".wasm" or s.ext == ".null0":
       echo "Deleting ", file
       rmFile(file)
 
