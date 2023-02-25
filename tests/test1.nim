@@ -26,6 +26,14 @@ suite "Physfs":
     discard deinit()
 
 suite "Pntr":
+  test "Gradient: Horizontal":
+    let canvas = gen_image_gradient_horizontal(320, 240, RED, BLUE)
+    save_image(canvas, "test-gradient-horiz.png")
+
+  test "Gradient: Vertical":
+    let canvas = gen_image_gradient_vertical(320, 240, RED, BLUE)
+    save_image(canvas, "test-gradient-vert.png")
+
   test "BM Font from file":
     let font = load_bmfont("./carts/fonts/assets/bmfont.png", " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/")
     let canvas = gen_image_color(320, 240, BLACK)
