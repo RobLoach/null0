@@ -1,4 +1,4 @@
-name: Test
+name: Test & Release
 
 on:
   pull_request:
@@ -6,6 +6,7 @@ on:
 
 jobs:
   tests:
+    name: Test & Release
     runs-on: ubuntu-latest
     steps:
       - name: Setup Host
