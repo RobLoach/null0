@@ -19,7 +19,7 @@ task debug, "Build and run a debug version of CLI host":
 
 task clean, "Clean built files":
   for file in listFiles("./tests"):
-    if file.endsWith("test1"):
+    if file.startsWith("./tests/test") and not file.endsWith(".nim"):
       echo "Deleting ", file
       rmFile(file)
   for file in listFiles("."):
