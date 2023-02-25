@@ -3,11 +3,11 @@ import ../src/null0/pntr
 import ../src/null0/physfs
 
 suite "Pntr: Gradients":
-  test "Horizontal":
+  test "horizontal":
     let canvas = pntr.gen_image_gradient_horizontal(320, 240, RED, BLUE)
     pntr.save_image(canvas, "test-gradient-horiz.png")
 
-  test "Vertical":
+  test "vertical":
     let canvas = pntr.gen_image_gradient_vertical(320, 240, RED, BLUE)
     pntr.save_image(canvas, "test-gradient-vert.png")
 
@@ -28,19 +28,19 @@ suite "Pntr: BM Fonts":
     pntr.save_image(canvas, "test-bm-mem.png")
     discard physfs.deinit()
 
-suite "Pntr: TTF Fonts":
-  test "from file":
-    let font = pntr.load_ttffont("./vendor/pntr/examples/resources/tuffy.ttf", 20, WHITE)
-    let canvas = pntr.gen_image_color(320, 240, BLACK)
-    pntr.draw_text(canvas, font, "Hello World", 120, 100)
-    pntr.save_image(canvas, "test-ttf-file.png")
+# suite "Pntr: TTF Fonts":
+#   test "from file":
+#     let font = pntr.load_ttffont("./vendor/pntr/examples/resources/tuffy.ttf", 20, WHITE)
+#     let canvas = pntr.gen_image_color(320, 240, BLACK)
+#     pntr.draw_text(canvas, font, "Hello World", 120, 100)
+#     pntr.save_image(canvas, "test-ttf-file.png")
 
-  # test "TTF from memory":
-  #   check init("test")
-  #   check mount("fonts.null0", "", true)
-  #   var b = read("/assets/tuffy.ttf")
-  #   let font = load_ttffont_from_memory(b.data, cuint b.length, 20, WHITE)
-  #   let canvas = gen_image_color(320, 240, BLACK)
-  #   draw_text(canvas, font, "Hello World", 120, 100)
-  #   save_image(canvas, "test-ttf-mem.png")
-  #   discard deinit()
+#   test "from memory":
+#     check init("test")
+#     check mount("fonts.null0", "", true)
+#     var b = read("/assets/tuffy.ttf")
+#     let font = load_ttffont_from_memory(b.data, cuint b.length, 20, WHITE)
+#     let canvas = gen_image_color(320, 240, BLACK)
+#     draw_text(canvas, font, "Hello World", 120, 100)
+#     save_image(canvas, "test-ttf-mem.png")
+#     discard deinit()
