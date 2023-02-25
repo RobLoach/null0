@@ -23,7 +23,7 @@ jobs:
       - name: Build Carts
         run: nimble carts
       - name: Run unit-tests
-        run: nimble test
+        run: nimble test --passC:"-Ivendor/"
       - name: Build Libretro - Linux x86_64
         run: nimble libretro && mv libnull0_libretro.so null0_libretro.so && zip libretro-linux-x86_64.zip -r null0_libretro.so
       - name: Build Runtime - Linux x86_64
