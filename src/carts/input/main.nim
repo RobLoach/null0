@@ -15,14 +15,14 @@ proc load() {.null0.} =
   buttonImages[ord BUTTON_RIGHT] = load_image("assets/right.png")
   buttonImages[ord BUTTON_A] = load_image("assets/a.png")
   buttonImages[ord BUTTON_X] = load_image("assets/x.png")
-  buttonImages[ord BUTTON_L] = load_image("assets/l.png")
-  buttonImages[ord BUTTON_R] = load_image("assets/r.png")
+  buttonImages[ord BUTTON_L] = load_image("assets/l1.png")
+  buttonImages[ord BUTTON_R] = load_image("assets/r1.png")
 
   # I wasn't sure how to draw these in 2D, so I just merged them into L/R
-  buttonImages[ord BUTTON_L2] = load_image("assets/l.png")
-  buttonImages[ord BUTTON_R2] = load_image("assets/r.png")
-  buttonImages[ord BUTTON_L3] = load_image("assets/l.png")
-  buttonImages[ord BUTTON_R3] = load_image("assets/r.png")
+  buttonImages[ord BUTTON_L2] = load_image("assets/l1.png")
+  buttonImages[ord BUTTON_R2] = load_image("assets/r1.png")
+  buttonImages[ord BUTTON_L3] = load_image("assets/l1.png")
+  buttonImages[ord BUTTON_R3] = load_image("assets/r1.png")
 
 proc buttonDown(button: Button) {.null0.} =
   buttonState[ord button] = true
@@ -31,9 +31,9 @@ proc buttonUp(button: Button) {.null0.} =
   buttonState[ord button] = false
 
 proc update() {.null0.} =
-  clear_background(RED)
+  clear_background(BLUE)
   draw_image(bg, 0, 50)
-  for b,state in pairs(buttonState):
+  for b, state in pairs(buttonState):
     if state:
       draw_image(buttonImages[b], 0, 3)
 
