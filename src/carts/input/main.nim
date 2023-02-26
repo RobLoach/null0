@@ -1,10 +1,5 @@
-import ../null0
-
 proc load() {.null0.} =
   echo "Hello from input."
-
-proc update() {.null0.} =
-  discard
 
 proc buttonDown(button: Button) {.null0.} =
   echo "down: ", button

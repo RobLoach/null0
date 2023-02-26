@@ -1,5 +1,3 @@
-import ../null0
-
 var bmFont:uint8
 var ttyFont:uint8
 var ttfFont:uint8

@@ -1,5 +1,3 @@
-import ../null0
-
 var logo:uint8
 var grad:uint8
 
