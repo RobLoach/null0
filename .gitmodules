@@ -9,3 +9,6 @@
 [submodule "vendor/soloud"]
 	path = vendor/soloud
 	url = https://github.com/jarikomppa/soloud.git
+[submodule "vendor/stb"]
+	path = vendor/stb
+	url = https://github.com/nothings/stb.git

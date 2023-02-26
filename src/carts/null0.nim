@@ -74,6 +74,7 @@ const RAYWHITE* = Color(r: 245, g: 245, b: 245, a: 255)
 
 var currentImage:uint8 = 0
 var currentFont:uint8 = 0
+var currentSound:uint8 = 0
 
 proc clear_background*(dst: uint8, color: Color){.importc, cdecl.}
 proc clear_background*(color: Color) =
@@ -141,3 +142,10 @@ proc gradient_horizontal*(width: cint, height: cint, left: Color, right: Color):
   gradient_horizontal(currentImage, width, height, left, right)
   return currentImage
 
+proc load_sound*(destination: uint8, filename: cstring){.importc, cdecl.}
+proc load_sound*(filename: cstring): uint8 = 
+  currentSound = currentSound + 1
+  load_sound(currentSound, filename)
+  return currentSound
+
+proc play_sound*(dsdt: uint8){.importc, cdecl.}

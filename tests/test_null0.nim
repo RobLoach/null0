@@ -32,7 +32,6 @@ suite "Null0: wasm (justlog)":
       extractAs(msg, cstring, sp, mem)
       echo msg
     let env = loadWasmEnv(readFile("justlog.wasm"), hostProcs = [
-      wasmHostProc("*", "null0_log", "v(i)", logProc)
     ])
     let cart_export_load = env.findFunction("load", [], [])
     cart_export_load.call(void)
@@ -43,7 +42,6 @@ suite "Null0: wasm (justlog)":
       extractAs(msg, cstring, sp, mem)
       echo msg
     let env = loadWasmEnv(readFile("justlog.wasm"), hostProcs = [
-      wasmHostProc("*", "null0_log", "v(i)", logProc)
     ])
     try:
       let cart_export_load = env.findFunction("loadbad", [], [])
@@ -58,7 +56,6 @@ suite "Null0: wasm (justlog)":
       var sp = sp.stackPtrToUint()
       callHost(logProcImpl, sp, mem)
     let env = loadWasmEnv(readFile("justlog.wasm"), hostProcs = [
-      wasmHostProc("*", "null0_log", "v(i)", logProc)
     ])
     env.findFunction("load", [], []).call(void)
 

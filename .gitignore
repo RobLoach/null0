@@ -3,8 +3,9 @@
 *.null0
 *.wasm
 tests/test_null0
-tests/test_pntr
 tests/test_physfs
+tests/test_pntr
+tests/test_soloud
 *.so
 *.dylib
 *.dll

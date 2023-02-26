@@ -1,10 +1,12 @@
 var buttonState:array[0..15, bool]
 var buttonImages:array[0..15, uint8]
 var bg:uint8
+var grad:uint8
 
 proc load() {.null0.} =
   echo "Hello from input."
   bg = load_image("assets/bg.png")
+  grad = gradient_vertical(320, 240, GREEN, BLUE)
   buttonImages[ord BUTTON_B] = load_image("assets/b.png")
   buttonImages[ord BUTTON_Y] = load_image("assets/y.png")
   buttonImages[ord BUTTON_SELECT] = load_image("assets/select.png")
@@ -31,7 +33,7 @@ proc buttonUp(button: Button) {.null0.} =
   buttonState[ord button] = false
 
 proc update() {.null0.} =
-  clear_background(BLUE)
+  draw_image(grad, 0, 0)
   draw_image(bg, 0, 50)
   for b, state in pairs(buttonState):
     if state:
