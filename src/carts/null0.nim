@@ -27,6 +27,51 @@ type
     r*: uint8
     a*: uint8
 
+  Button* = enum
+    BUTTON_B = 0,
+    BUTTON_Y = 1,
+    BUTTON_SELECT = 2,
+    BUTTON_START = 3,
+    BUTTON_UP = 4,
+    BUTTON_DOWN = 5,
+    BUTTON_LEFT = 6,
+    BUTTON_RIGHT = 7,
+    BUTTON_A = 8,
+    BUTTON_X = 9,
+    BUTTON_L = 10,
+    BUTTON_R = 11,
+    BUTTON_L2 = 12,
+    BUTTON_R2 = 13,
+    BUTTON_L3 = 14,
+    BUTTON_R3 = 15
+
+const LIGHTGRAY* = Color(r: 200, g: 200, b: 200, a: 255)
+const GRAY* = Color(r: 130, g: 130, b: 130, a: 255)
+const DARKGRAY* = Color(r: 80, g: 80, b: 80, a: 255)
+const YELLOW* = Color(r: 253, g: 249, b: 0, a: 255  )
+const GOLD* = Color(r: 255, g: 203, b: 0, a: 255  )
+const ORANGE* = Color(r: 255, g: 161, b: 0, a: 255  )
+const PINK* = Color(r: 255, g: 109, b: 194, a: 255)
+const RED* = Color(r: 230, g: 41, b: 55, a: 255)
+const MAROON* = Color(r: 190, g: 33, b: 55, a: 255)
+const GREEN* = Color(r: 0, g: 228, b: 48, a: 255)
+const LIME* = Color(r: 0, g: 158, b: 47, a: 255)
+const DARKGREEN* = Color(r: 0, g: 117, b: 44, a: 255)
+const SKYBLUE* = Color(r: 102, g: 191, b: 255, a: 255)
+const BLUE* = Color(r: 0, g: 121, b: 241, a: 255)
+const DARKBLUE* = Color(r: 0, g: 82, b: 172, a: 255)
+const PURPLE* = Color(r: 200, g: 122, b: 255, a: 255)
+const VIOLET* = Color(r: 135, g: 60, b: 190, a: 255)
+const DARKPURPLE* = Color(r: 112, g: 31, b: 126, a: 255)
+const BEIGE* = Color(r: 211, g: 176, b: 131, a: 255)
+const BROWN* = Color(r: 127, g: 106, b: 79, a: 255)
+const DARKBROWN* = Color(r: 76, g: 63, b: 47, a: 255)
+const WHITE* = Color(r: 255, g: 255, b: 255, a: 255)
+const BLACK* = Color(r: 0, g: 0, b: 0, a: 255)
+const BLANK* = Color(r: 0, g: 0, b: 0, a: 0  )
+const MAGENTA* = Color(r: 255, g: 0, b: 255, a: 255)
+const RAYWHITE* = Color(r: 245, g: 245, b: 245, a: 255)
+
 var currentImage:uint8 = 0
 var currentFont:uint8 = 0
 
@@ -96,48 +141,3 @@ proc gradient_horizontal*(width: cint, height: cint, left: Color, right: Color):
   gradient_horizontal(currentImage, width, height, left, right)
   return currentImage
 
-const LIGHTGRAY* = Color(r: 200, g: 200, b: 200, a: 255)
-const GRAY* = Color(r: 130, g: 130, b: 130, a: 255)
-const DARKGRAY* = Color(r: 80, g: 80, b: 80, a: 255)
-const YELLOW* = Color(r: 253, g: 249, b: 0, a: 255  )
-const GOLD* = Color(r: 255, g: 203, b: 0, a: 255  )
-const ORANGE* = Color(r: 255, g: 161, b: 0, a: 255  )
-const PINK* = Color(r: 255, g: 109, b: 194, a: 255)
-const RED* = Color(r: 230, g: 41, b: 55, a: 255)
-const MAROON* = Color(r: 190, g: 33, b: 55, a: 255)
-const GREEN* = Color(r: 0, g: 228, b: 48, a: 255)
-const LIME* = Color(r: 0, g: 158, b: 47, a: 255)
-const DARKGREEN* = Color(r: 0, g: 117, b: 44, a: 255)
-const SKYBLUE* = Color(r: 102, g: 191, b: 255, a: 255)
-const BLUE* = Color(r: 0, g: 121, b: 241, a: 255)
-const DARKBLUE* = Color(r: 0, g: 82, b: 172, a: 255)
-const PURPLE* = Color(r: 200, g: 122, b: 255, a: 255)
-const VIOLET* = Color(r: 135, g: 60, b: 190, a: 255)
-const DARKPURPLE* = Color(r: 112, g: 31, b: 126, a: 255)
-const BEIGE* = Color(r: 211, g: 176, b: 131, a: 255)
-const BROWN* = Color(r: 127, g: 106, b: 79, a: 255)
-const DARKBROWN* = Color(r: 76, g: 63, b: 47, a: 255)
-const WHITE* = Color(r: 255, g: 255, b: 255, a: 255)
-const BLACK* = Color(r: 0, g: 0, b: 0, a: 255)
-const BLANK* = Color(r: 0, g: 0, b: 0, a: 0  )
-const MAGENTA* = Color(r: 255, g: 0, b: 255, a: 255)
-const RAYWHITE* = Color(r: 245, g: 245, b: 245, a: 255)
-
-type
-  Button* = enum
-    BUTTON_B = 0,
-    BUTTON_Y= 1,
-    BUTTON_SELECT= 2,
-    BUTTON_START= 3,
-    BUTTON_UP= 4,
-    BUTTON_DOWN= 5,
-    BUTTON_LEFT= 6,
-    BUTTON_RIGHT= 7,
-    BUTTON_A= 8,
-    BUTTON_X= 9,
-    BUTTON_L= 10,
-    BUTTON_R= 11,
-    BUTTON_L2= 12,
-    BUTTON_R2= 13,
-    BUTTON_L3= 14,
-    BUTTON_R3= 15
