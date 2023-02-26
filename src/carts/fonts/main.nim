@@ -5,7 +5,7 @@ var ttyFont:uint8
 var ttfFont:uint8
 
 proc load() {.null0.} =
-  log("Hello from fonts.")
+  echo "Hello from fonts."
   bmFont = load_font_bm("assets/bmfont.png", " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/")
   ttyFont = load_font_tty("assets/ttyfont-16x16.png", 16, 16, "\x7f !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
   ttfFont = load_font_ttf("assets/tuffy.ttf", 25, GREEN)
@@ -19,4 +19,4 @@ proc update() {.null0.} =
   
 
 proc unload() {.null0.} =
-  log("Ok, bye.")
+  echo "Ok, bye."

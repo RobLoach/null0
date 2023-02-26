@@ -30,8 +30,6 @@ type
 var currentImage:uint8 = 0
 var currentFont:uint8 = 0
 
-proc log*(s: cstring){.importc:"null0_log", cdecl.}
-
 proc clear_background*(dst: uint8, color: Color){.importc, cdecl.}
 proc clear_background*(color: Color) =
   clear_background(uint8 0, color)
@@ -124,3 +122,22 @@ const BLACK* = Color(r: 0, g: 0, b: 0, a: 255)
 const BLANK* = Color(r: 0, g: 0, b: 0, a: 0  )
 const MAGENTA* = Color(r: 255, g: 0, b: 255, a: 255)
 const RAYWHITE* = Color(r: 245, g: 245, b: 245, a: 255)
+
+type
+  Button* = enum
+    BUTTON_B = 0,
+    BUTTON_Y= 1,
+    BUTTON_SELECT= 2,
+    BUTTON_START= 3,
+    BUTTON_UP= 4,
+    BUTTON_DOWN= 5,
+    BUTTON_LEFT= 6,
+    BUTTON_RIGHT= 7,
+    BUTTON_A= 8,
+    BUTTON_X= 9,
+    BUTTON_L= 10,
+    BUTTON_R= 11,
+    BUTTON_L2= 12,
+    BUTTON_R2= 13,
+    BUTTON_L3= 14,
+    BUTTON_R3= 15

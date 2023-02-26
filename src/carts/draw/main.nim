@@ -4,7 +4,7 @@ var logo:uint8
 var grad:uint8
 
 proc load() {.null0.} =
-  log("Hello from draw.")
+  echo "Hello from draw."
   logo = load_image("assets/logo.png")
   grad = gradient_vertical(320, 240, RED, BLUE)
 
@@ -17,4 +17,4 @@ proc update() {.null0.} =
   draw_image(logo, 64, 47)
 
 proc unload() {.null0.} =
-  log("Ok, bye.")
+  echo "Ok, bye."

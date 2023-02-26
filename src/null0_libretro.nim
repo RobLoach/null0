@@ -82,6 +82,9 @@ proc retro_reset*() {.cdecl,exportc,dynlib.} =
   log_cb(RETRO_LOG_DEBUG, "retro_reset() called.")
 
 proc retro_run*() {.cdecl,exportc,dynlib.} =
+  input_poll_cb()
+  for button in 0..15:
+    cartButtonHandle(uint8 button, input_state_cb(cuint 0, cuint RETRO_DEVICE_JOYPAD, cuint 0, cuint button) != 0)
   cartUpdate()
   video_cb(null0_images[0][].data, WIDTH, HEIGHT, (WIDTH shl 2))
 

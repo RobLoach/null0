@@ -6,15 +6,38 @@ import wasm3/wasm3c
 import pntr
 import std/strformat
 
+type
+  Null0Buttons* = array[16, bool]
+
 # TODO: figure out a way to enable with build-flag (for libretro) and not just CLI param
 var allowNetwork* = false
 
 var null0_export_load:PFunction
 var null0_export_update:PFunction
 var null0_export_unload:PFunction
+var null0_export_buttonDown:PFunction
+var null0_export_buttonUp:PFunction
 
 var null0_images*:array[255, ptr pntr_image]
 var null0_fonts*:array[255, ptr pntr_font]
+var null0_buttons*: Null0Buttons
+
+const BUTTON_B* = 0
+const BUTTON_Y* = 1
+const BUTTON_SELECT* = 2
+const BUTTON_START* = 3
+const BUTTON_UP* = 4
+const BUTTON_DOWN* = 5
+const BUTTON_LEFT* = 6
+const BUTTON_RIGHT* = 7
+const BUTTON_A* = 8
+const BUTTON_X* = 9
+const BUTTON_L* = 10
+const BUTTON_R* = 11
+const BUTTON_L2* = 12
+const BUTTON_R2* = 13
+const BUTTON_L3* = 14
+const BUTTON_R3* = 15
 
 proc fromWasm*(result: var pntr_color, sp: var uint64, mem: pointer) =
   var i: uint32
@@ -32,12 +55,6 @@ proc fromWasm*(result: var ptr pntr_font, sp: var uint64, mem: pointer) =
   i.fromWasm(sp, mem)
   var d = cast[ptr uint8](cast[uint64](mem) + i)[]
   result = null0_fonts[d]
-
-proc null0Import_log(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
-  proc procImpl(c: cstring) =
-    echo c
-  var sp = sp.stackPtrToUint()
-  callHost(procImpl, sp, mem)
 
 proc null0Import_clear_background(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   var sp = sp.stackPtrToUint()
@@ -175,6 +192,17 @@ proc cartUnload*(): void =
       # echo font[]
       pntr.unload_font(font)
 
+proc cartButtonHandle*(button:cuint, state: bool) = 
+  ## call this to update button-state - this can be hammerd in host, and will only call buttonUp/buttonDown on change
+  if null0_buttons[button] != state:
+    null0_buttons[button] = state
+    if state:
+      if null0_export_ButtonDown != nil:
+        null0_export_ButtonDown.call(void, button)
+    else:
+      if null0_export_ButtonUp != nil:
+        null0_export_ButtonUp.call(void, button)
+
 proc cartLoad*(file:FileData) = 
   ## given a (loaded) file-object, load a cart
 
@@ -193,11 +221,6 @@ proc cartLoad*(file:FileData) =
   checkWasmRes m3_LoadModule(runtime, module)
   checkWasmRes m3LinkWasi(module)
   
-  # imports may not be exposed 
-  try:
-    checkWasmRes m3_LinkRawFunction(module, "*", "null0_log", "v(*)", null0Import_log)
-  except WasmError:
-    discard
   try:
     checkWasmRes m3_LinkRawFunction(module, "*", "clear_background", "v(ii)", null0Import_clear_background)
   except WasmError:
@@ -282,6 +305,14 @@ proc cartLoad*(file:FileData) =
     discard
   try:
     checkWasmRes m3_FindFunction(null0_export_load.addr, runtime, "load")
+  except WasmError:
+    discard
+  try:
+    checkWasmRes m3_FindFunction(null0_export_buttonDown.addr, runtime, "buttonDown")
+  except WasmError:
+    discard
+  try:
+    checkWasmRes m3_FindFunction(null0_export_buttonUp.addr, runtime, "buttonUp")
   except WasmError:
     discard
 
