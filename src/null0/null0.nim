@@ -126,11 +126,8 @@ proc null0Import_load_font_ttyfont(runtime: PRuntime; ctx: PImportContext; sp: p
 proc null0Import_load_font_ttffont(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc procImpl(destination: uint8, filename: cstring, fontSize: cint, fontColor: pntr_color) =
     var f = physfs.read($filename)
-    echo fmt"load_font_ttffont({destination}, {filename}, {fontSize}, {fontColor}): {f.length}"
     null0_fonts[destination] = pntr.load_ttffont_from_memory(f.data, cuint f.length, fontSize, fontColor)
-    dealloc(f.data)
-    var err = get_error()
-    echo err
+    # null0_fonts[destination] = pntr.load_ttffont("./vendor/pntr/examples/resources/tuffy.ttf", 20, WHITE)
   var sp = sp.stackPtrToUint()
   callHost(procImpl, sp, mem)
 
