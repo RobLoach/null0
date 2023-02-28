@@ -8,7 +8,8 @@
 {.compile: "vendor/soloud/src/audiosource/ay/soloud_ay.cpp".}
 {.compile: "vendor/soloud/src/audiosource/monotone/soloud_monotone.cpp".}
 {.compile: "vendor/soloud/src/audiosource/noise/soloud_noise.cpp".}
-# {.compile: "vendor/soloud/src/audiosource/openmpt/soloud_openmpt.cpp".}
+{.compile: "vendor/soloud/src/audiosource/openmpt/soloud_openmpt.cpp".}
+{.compile: "vendor/soloud/src/audiosource/openmpt/soloud_openmpt_dll.c".}
 {.compile: "vendor/soloud/src/audiosource/sfxr/soloud_sfxr.cpp".}
 {.compile: "vendor/soloud/src/audiosource/speech/darray.cpp".}
 {.compile: "vendor/soloud/src/audiosource/speech/klatt.cpp".}
@@ -981,9 +982,7 @@ proc WavStream_destroy*(aWavStream: ptr WavStream)
 proc WavStream_create*(): ptr WavStream
 proc WavStream_load*(aWavStream: ptr WavStream; aFilename: cstring): cint
 proc WavStream_loadMem*(aWavStream: ptr WavStream; aData: ptr uint8; aDataLen: cuint): cint
-proc WavStream_loadMemEx*(aWavStream: ptr WavStream; aData: ptr uint8;
-                         aDataLen: cuint; aCopy: cint; ##  = false
-                         aTakeOwnership: cint): cint
+proc WavStream_loadMemEx*(aWavStream: ptr WavStream; aData: ptr uint8; aDataLen: cuint; aCopy: cint; aTakeOwnership: cint): cint
 proc WavStream_loadToMem*(aWavStream: ptr WavStream; aFilename: cstring): cint
 proc WavStream_loadFile*(aWavStream: ptr WavStream; aFile: ptr File): cint
 proc WavStream_loadFileToMem*(aWavStream: ptr WavStream; aFile: ptr File): cint

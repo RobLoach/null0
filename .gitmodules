@@ -12,3 +12,6 @@
 [submodule "vendor/stb"]
 	path = vendor/stb
 	url = https://github.com/nothings/stb.git
+[submodule "vendor/openmpt"]
+	path = vendor/openmpt
+	url = https://github.com/OpenMPT/openmpt.git

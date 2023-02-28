@@ -1,20 +1,22 @@
 import times
 import os
-
 import unittest
 
 import ../src/null0/soloud
-
+import ../src/null0/physfs
 
 suite "Soloud":
   test "play ogg":
-    var i, spin = 0
-    var sl : ptr Soloud
-    sl = Soloud_create()
+    var sl = Soloud_create()
     discard Soloud_init(sl)
     Soloud_setGlobalVolume(sl, 1)
+
+    check physfs.init("test")
+    check physfs.mount("sound.null0", "", true)
+    var b = physfs.read("assets/notnullgames.ogg")
     var stream = WavStream_create()
-    discard WavStream_load(cast[ptr Wav](stream), "src/carts/sound/assets/notnullgames.ogg")
+    var success = WavStream_loadMem(stream, cast[ptr uint8](b.data), cuint b.length)
+
     let currentTime = epochTime()
     let length = WavStream_getLength(stream)
     discard Soloud_play(cast[ptr Soloud](sl), cast[ptr Wav](stream))
@@ -24,3 +26,4 @@ suite "Soloud":
 
     Soloud_deinit(sl)
     Soloud_destroy(sl)
+    discard physfs.deinit()
