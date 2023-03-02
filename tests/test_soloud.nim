@@ -8,7 +8,7 @@ import ../src/null0/physfs
 suite "Soloud":
   test "play ogg":
     var sl = Soloud_create()
-    discard Soloud_init(sl)
+    discard Soloud_initEx(sl, ord(SOLOUD_CLIP_ROUNDOFF), ord(SOLOUD_NULLDRIVER), 44100, ord(SOLOUD_AUTO), 2)
     Soloud_setGlobalVolume(sl, 1)
 
     check physfs.init("test")
