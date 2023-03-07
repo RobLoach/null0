@@ -9,7 +9,10 @@
 {.compile: "vendor/soloud/src/audiosource/monotone/soloud_monotone.cpp".}
 {.compile: "vendor/soloud/src/audiosource/noise/soloud_noise.cpp".}
 {.compile: "vendor/soloud/src/audiosource/openmpt/soloud_openmpt.cpp".}
+
+# figure out how to implement these functions without a DLL (inline openmpt code)
 {.compile: "vendor/soloud/src/audiosource/openmpt/soloud_openmpt_dll.c".}
+
 {.compile: "vendor/soloud/src/audiosource/sfxr/soloud_sfxr.cpp".}
 {.compile: "vendor/soloud/src/audiosource/speech/darray.cpp".}
 {.compile: "vendor/soloud/src/audiosource/speech/klatt.cpp".}
