@@ -163,6 +163,14 @@ proc null0Import_load_speech(runtime: PRuntime; ctx: PImportContext; sp: ptr uin
   var sp = sp.stackPtrToUint()
   callHost(procImpl, sp, mem)
 
+proc null0Import_load_sound(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
+  proc procImpl(destination: uint8, filename: cstring) =
+    null0_sounds[destination] = Wav_create()
+    let c = physfs.read($filename)
+    discard Wav_loadMemEx(null0_sounds[destination], unsafeAddr c.data[0], cuint c.length, 1, 0)
+  var sp = sp.stackPtrToUint()
+  callHost(procImpl, sp, mem)
+
 proc null0Import_play_sound(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc procImpl(destination: uint8) =
     discard Soloud_play(null0_sound, null0_sounds[destination])
@@ -239,7 +247,8 @@ proc cartLoad*(file:FileData) =
   null0_fonts[0] = load_default_font()
 
   null0_sound = Soloud_create()
-  discard Soloud_initEx(null0_sound, CLIP_ROUNDOFF, NULLDRIVER, 44100, 0, 2)
+  # TODO: get this working with NULLDRIVER
+  discard Soloud_initEx(null0_sound, CLIP_ROUNDOFF, MINIAUDIO, 44100, 0, 2)
   Soloud_setGlobalVolume(null0_sound, 4.0)
   aBuffer = alloc(uint SAMPLES_PER_FRAME);
 
@@ -321,6 +330,10 @@ proc cartLoad*(file:FileData) =
     discard
   try:
     checkWasmRes m3_LinkRawFunction(module, "*", "load_speech", "v(i*)", null0Import_load_speech)
+  except WasmError:
+    discard
+  try:
+    checkWasmRes m3_LinkRawFunction(module, "*", "load_sound", "v(i*)", null0Import_load_sound)
   except WasmError:
     discard
   try:
