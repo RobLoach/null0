@@ -9,7 +9,6 @@ import null0/null0
 const WIDTH = 320
 const HEIGHT = 240 
 const FPS = 60
-const SAMPLE_RATE = 48000
 
 var video_cb: retro_video_refresh_t
 var audio_cb: retro_audio_sample_t
@@ -87,6 +86,7 @@ proc retro_run*() {.cdecl,exportc,dynlib.} =
     cartButtonHandle(uint8 button, input_state_cb(cuint 0, cuint RETRO_DEVICE_JOYPAD, cuint 0, cuint button) != 0)
   cartUpdate()
   video_cb(null0_images[0][].data, WIDTH, HEIGHT, (WIDTH shl 2))
+  discard audio_batch_cb( cast[ptr UncheckedArray[int16]](null_sound_mix()), csize_t SAMPLES_PER_FRAME )
 
 proc retro_load_game*(info: ptr retro_game_info): bool {.cdecl,exportc,dynlib.} =
   var fmt = RETRO_PIXEL_FORMAT_XRGB8888

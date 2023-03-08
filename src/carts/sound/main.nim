@@ -2,7 +2,7 @@ var intro:uint8
 
 proc load*() {.null0.} =
   echo "Hello from sound."
-  intro = load_sound("assets/notnullgames.ogg")
+  intro = load_speech("Hello World.")
   play_sound(intro)
 
 proc unload*() {.null0.} =

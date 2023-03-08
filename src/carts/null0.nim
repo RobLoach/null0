@@ -148,4 +148,10 @@ proc load_sound*(filename: cstring): uint8 =
   load_sound(currentSound, filename)
   return currentSound
 
+proc load_speech*(destination: uint8, text: cstring){.importc, cdecl.}
+proc load_speech*(text: cstring): uint8 = 
+  currentSound = currentSound + 1
+  load_speech(currentSound, text)
+  return currentSound
+
 proc play_sound*(dsdt: uint8){.importc, cdecl.}

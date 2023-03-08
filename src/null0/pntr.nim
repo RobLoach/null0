@@ -1,3 +1,5 @@
+{.passC: "-Ivendor/".}
+
 {.emit: """
 #define PNTR_IMPLEMENTATION
 #define PNTR_PIXELFORMAT_ARGB

@@ -5,6 +5,7 @@ import wasm3
 import wasm3/wasm3c
 import pntr
 import std/strformat
+import soloud
 
 type
   Null0Buttons* = array[16, bool]
@@ -20,7 +21,14 @@ var null0_export_buttonUp:PFunction
 
 var null0_images*:array[255, ptr pntr_image]
 var null0_fonts*:array[255, ptr pntr_font]
+var null0_sounds*:array[255, pointer]
 var null0_buttons*: Null0Buttons
+var null0_sound*: Soloud
+var aBuffer*: pointer
+
+const FRAME_RATE* = 60
+const SAMPLE_RATE* = 44100
+const SAMPLES_PER_FRAME* = SAMPLE_RATE / FRAME_RATE
 
 const BUTTON_B* = 0
 const BUTTON_Y* = 1
@@ -148,6 +156,20 @@ proc null0Import_load_font_ttffont(runtime: PRuntime; ctx: PImportContext; sp: p
   var sp = sp.stackPtrToUint()
   callHost(procImpl, sp, mem)
 
+proc null0Import_load_speech(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
+  proc procImpl(destination: uint8, text: cstring) =
+    null0_sounds[destination] = Speech_create()
+    discard Speech_setText(null0_sounds[destination], text)
+  var sp = sp.stackPtrToUint()
+  callHost(procImpl, sp, mem)
+
+proc null0Import_play_sound(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
+  proc procImpl(destination: uint8) =
+    discard Soloud_play(null0_sound, null0_sounds[destination])
+  var sp = sp.stackPtrToUint()
+  callHost(procImpl, sp, mem)
+
+
 proc isZip*(bytes: string): bool =
   ## detect if some bytes (at least 4) are a zip file
   return ord(bytes[0]) == 0x50 and ord(bytes[1]) == 0x4B and ord(bytes[2]) == 0x03 and ord(bytes[3]) == 0x04
@@ -203,6 +225,9 @@ proc cartButtonHandle*(button:cuint, state: bool) =
       if null0_export_ButtonUp != nil:
         null0_export_ButtonUp.call(void, button)
 
+proc null_sound_mix*(): pointer = 
+  return Soloud_mixSigned16(null0_sound, aBuffer, cuint SAMPLES_PER_FRAME)
+
 proc cartLoad*(file:FileData) = 
   ## given a (loaded) file-object, load a cart
 
@@ -212,6 +237,11 @@ proc cartLoad*(file:FileData) =
 
   null0_images[0] = new_image(320, 240)
   null0_fonts[0] = load_default_font()
+
+  null0_sound = Soloud_create()
+  discard Soloud_initEx(null0_sound, CLIP_ROUNDOFF, NULLDRIVER, 44100, 0, 2)
+  Soloud_setGlobalVolume(null0_sound, 4.0)
+  aBuffer = alloc(uint SAMPLES_PER_FRAME);
 
   var env = m3_NewEnvironment()
   var runtime = env.m3_NewRuntime(uint16.high.uint32, nil)
@@ -287,6 +317,14 @@ proc cartLoad*(file:FileData) =
     discard
   try:
     checkWasmRes m3_LinkRawFunction(module, "*", "gradient_horizontal", "v(iiiii)", null0Import_gradient_horizontal)
+  except WasmError:
+    discard
+  try:
+    checkWasmRes m3_LinkRawFunction(module, "*", "load_speech", "v(i*)", null0Import_load_speech)
+  except WasmError:
+    discard
+  try:
+    checkWasmRes m3_LinkRawFunction(module, "*", "play_sound", "v(i)", null0Import_play_sound)
   except WasmError:
     discard
 
