@@ -49,9 +49,8 @@ suite "Soloud":
     let wav = Wav_create()
     defer: Wav_destroy(wav)
 
-    let c = readFile("src/carts/sound/assets/notnullgames.ogg").cstring
-    # TODO: pointer being freed was not allocated
-    discard Wav_loadMem(wav, cast[pointer](c.unsafeAddr), cuint c.len)
+    let c = readFile("src/carts/sound/assets/notnullgames.ogg")
+    discard Wav_loadMemEx(wav, unsafeAddr c[0], cuint len(c), 1, 0)
     
     discard Soloud_play(sl, wav)
     while Soloud_getVoiceCount(sl) > 0:
