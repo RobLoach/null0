@@ -9,7 +9,7 @@ import ../src/null0/soloud
 suite "Soloud":
   test "text":
     let sl = Soloud_create()
-    defer: Soloud_destroy(sl)
+    defer: Soloud_cleanup(sl)
 
     discard Soloud_init(sl)
     Soloud_setGlobalVolume(sl, 3.0)
@@ -25,7 +25,7 @@ suite "Soloud":
   
   test "ogg: file":
     let sl = Soloud_create()
-    defer: Soloud_destroy(sl)
+    defer: Soloud_cleanup(sl)
 
     discard Soloud_init(sl)
     Soloud_setGlobalVolume(sl, 3.0)
@@ -41,7 +41,7 @@ suite "Soloud":
 
   test "ogg: memory":
     let sl = Soloud_create()
-    defer: Soloud_destroy(sl)
+    defer: Soloud_cleanup(sl)
 
     discard Soloud_init(sl)
     Soloud_setGlobalVolume(sl, 3.0)

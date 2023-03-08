@@ -768,3 +768,10 @@ proc WavStream_setFilter*(aWavStream: WavStream; aFilterId: cuint; aFilter: Filt
 proc WavStream_stop*(aWavStream: WavStream)
 
 {.pop.}
+
+# full cleanup for sloud engine
+proc Soloud_cleanup*(sl: Soloud) =
+  Soloud_stopAll(sl)
+  Soloud_deinit(sl)
+  Soloud_destroy(sl)
+
