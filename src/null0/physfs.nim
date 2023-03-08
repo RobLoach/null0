@@ -86,6 +86,7 @@ proc fileLength*(filename:string): uint64 =
   var l = uint64 f.fileLength
   return l
 
+# TODO: remove FileData and use regular string. C can use unsafeAddr s[0]
 proc read*(filename:string): FileData =
   if not exists(filename):
     return 

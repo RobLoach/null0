@@ -2,6 +2,7 @@ import os
 import unittest
 
 import ../src/null0/soloud
+import ../src/null0/physfs
 
 # discard Soloud_initEx(sl, CLIP_ROUNDOFF, MINIAUDIO, 44100, 0, 2)
 # discard Soloud_initEx(sl, CLIP_ROUNDOFF, NULLDRIVER, 44100, 0, 2)
@@ -55,5 +56,27 @@ suite "Soloud":
     discard Soloud_play(sl, wav)
     while Soloud_getVoiceCount(sl) > 0:
       sleep(100)
+
+  test "ogg: physfs":
+    check physfs.init("test")
+    defer: discard physfs.deinit()
+
+    check physfs.mount("sound.null0", "", true)
+    let sl = Soloud_create()
+    defer: Soloud_cleanup(sl)
+
+    discard Soloud_init(sl)
+    Soloud_setGlobalVolume(sl, 3.0)
+
+    let wav = Wav_create()
+    defer: Wav_destroy(wav)
+
+    let c = physfs.read("/assets/notnullgames.ogg")
+    discard Wav_loadMemEx(wav, unsafeAddr c.data[0], cuint c.length, 1, 0)
+    
+    discard Soloud_play(sl, wav)
+    while Soloud_getVoiceCount(sl) > 0:
+      sleep(100)
+
 
 
