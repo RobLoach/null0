@@ -697,8 +697,8 @@ proc Vizsn_stop*(aVizsn: Vizsn)
 proc Wav_destroy*(aWav: Wav)
 proc Wav_create*(): Wav
 proc Wav_load*(aWav: Wav; aFilename: cstring): cint
-proc Wav_loadMem*(aWav: Wav; aMem: uint8; aLength: cuint): cint
-proc Wav_loadMemEx*(aWav: Wav; aMem: uint8; aLength: cuint; aCopy: cint;  aTakeOwnership: cint): cint
+proc Wav_loadMem*(aWav: Wav; aMem: pointer; aLength: cuint): cint
+proc Wav_loadMemEx*(aWav: Wav; aMem: pointer; aLength: cuint; aCopy: cint;  aTakeOwnership: cint): cint
 proc Wav_loadFile*(aWav: Wav; aFile: File): cint
 proc Wav_loadRawWave8*(aWav: Wav; aMem: uint8; aLength: cuint): cint
 proc Wav_loadRawWave8Ex*(aWav: Wav; aMem: uint8; aLength: cuint; aSamplerate: cfloat;  aChannels: cuint): cint

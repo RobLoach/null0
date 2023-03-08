@@ -8,34 +8,53 @@ import ../src/null0/soloud
 
 suite "Soloud":
   test "text":
-    var sl = Soloud_create()
+    let sl = Soloud_create()
+    defer: Soloud_destroy(sl)
+
     discard Soloud_init(sl)
     Soloud_setGlobalVolume(sl, 3.0)
 
-    var speech = Speech_create()
+    let speech = Speech_create()
+    defer: Speech_destroy(speech)
+
     discard Speech_setText(speech, "Hello")
     
     discard Soloud_play(sl, speech)
     while Soloud_getVoiceCount(sl) > 0:
       sleep(100)
-    
-    Speech_destroy(speech)
-    Soloud_deinit(sl)
-    Soloud_destroy(sl)
   
   test "ogg: file":
-    var sl = Soloud_create()
+    let sl = Soloud_create()
+    defer: Soloud_destroy(sl)
+
     discard Soloud_init(sl)
     Soloud_setGlobalVolume(sl, 3.0)
 
-    var wav = Wav_create()
+    let wav = Wav_create()
+    defer: Wav_destroy(wav)
+
     discard Wav_load(wav, "src/carts/sound/assets/notnullgames.ogg")
     
     discard Soloud_play(sl, wav)
     while Soloud_getVoiceCount(sl) > 0:
       sleep(100)
 
-    Wav_destroy(wav)
-    Soloud_deinit(sl)
-    Soloud_destroy(sl)
+  test "ogg: memory":
+    let sl = Soloud_create()
+    defer: Soloud_destroy(sl)
+
+    discard Soloud_init(sl)
+    Soloud_setGlobalVolume(sl, 3.0)
+
+    let wav = Wav_create()
+    defer: Wav_destroy(wav)
+
+    let c = readFile("src/carts/sound/assets/notnullgames.ogg").cstring
+    # TODO: pointer being freed was not allocated
+    discard Wav_loadMem(wav, cast[pointer](c.unsafeAddr), cuint c.len)
+    
+    discard Soloud_play(sl, wav)
+    while Soloud_getVoiceCount(sl) > 0:
+      sleep(100)
+
 
