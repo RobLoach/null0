@@ -1,4 +1,4 @@
-{.passC: "-Ivendor/soloud/src/ -Ivendor/soloud/include/ -DWITH_NULL -DWITH_MINIAUDIO".}
+{.passC: "-Ivendor/soloud/src/ -Ivendor/soloud/include/ -DWITH_NULL".}
 
 {.compile: "vendor/soloud/src/audiosource/openmpt/soloud_openmpt.cpp".}
 {.compile: "vendor/soloud/src/audiosource/openmpt/soloud_openmpt_dll.c".}
@@ -264,7 +264,7 @@ proc Soloud_set3dSourceMinMaxDistance*(aSoloud: Soloud; aVoiceHandle: cuint; aMi
 proc Soloud_set3dSourceAttenuation*(aSoloud: Soloud; aVoiceHandle: cuint; aAttenuationModel: cuint; aAttenuationRolloffFactor: cfloat)
 proc Soloud_set3dSourceDopplerFactor*(aSoloud: Soloud; aVoiceHandle: cuint; aDopplerFactor: cfloat)
 proc Soloud_mix*(aSoloud: Soloud; aBuffer: cfloat; aSamples: cuint)
-proc Soloud_mixSigned16*(aSoloud: Soloud; aBuffer: pointer; aSamples: cuint): pointer
+proc Soloud_mixSigned16*(aSoloud: Soloud; aBuffer: pointer; aSamples: cuint)
 
 ##
 ##  Ay

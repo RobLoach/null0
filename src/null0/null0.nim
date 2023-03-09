@@ -234,7 +234,8 @@ proc cartButtonHandle*(button:cuint, state: bool) =
         null0_export_ButtonUp.call(void, button)
 
 proc null_sound_mix*(): pointer = 
-  return Soloud_mixSigned16(null0_sound, aBuffer, cuint SAMPLES_PER_FRAME)
+  Soloud_mixSigned16(null0_sound, aBuffer, cuint SAMPLES_PER_FRAME)
+  return aBuffer
 
 proc cartLoad*(file:FileData) = 
   ## given a (loaded) file-object, load a cart
@@ -247,8 +248,7 @@ proc cartLoad*(file:FileData) =
   null0_fonts[0] = load_default_font()
 
   null0_sound = Soloud_create()
-  # TODO: get this working with NULLDRIVER
-  discard Soloud_initEx(null0_sound, CLIP_ROUNDOFF, MINIAUDIO, 44100, 0, 2)
+  discard Soloud_initEx(null0_sound, CLIP_ROUNDOFF, NULLDRIVER, 44100, 0, 2)
   Soloud_setGlobalVolume(null0_sound, 4.0)
   aBuffer = alloc(uint SAMPLES_PER_FRAME);
 
