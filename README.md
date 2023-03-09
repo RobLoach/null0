@@ -2,14 +2,14 @@ Eventually, this will have a native host and a libretro core.
 
 ## development
 
-You're going to need some stuff installed on your system.
+You're going to need some stuff installed on your system. You will need nim to build the initial stuff (libretro host, carts, etc.) See [here](https://nim-lang.org/install_unix.html) for help installing. Additionally, you need emscripten for building carts:
 
 ```sh
 # mac
-brew install physfs emscripten
+brew install emscripten nim
 
 # linux (debian/ubuntu/etc)
-sudo apt install -y libphysfs-dev emscripten
+sudo apt install -y emscripten nim
 ```
 
 Now you can do some stuff:
