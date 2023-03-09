@@ -1,4 +1,4 @@
-{.passC: "-Ivendor/soloud/src/ -Ivendor/soloud/include/ -DWITH_NULL -DWITH_MINIAUDIO".}
+{.passC: "-Ivendor/soloud/src/ -Ivendor/soloud/include/ -DWITH_NULL -DWITH_MINIAUDIO -DWITH_NOSOUND".}
 
 {.compile: "vendor/soloud/src/audiosource/openmpt/soloud_openmpt.cpp".}
 {.compile: "vendor/soloud/src/audiosource/openmpt/soloud_openmpt_dll.c".}
@@ -29,7 +29,7 @@
 # {.compile: "vendor/soloud/src/backend/coreaudio/soloud_coreaudio.cpp".}
 # {.compile: "vendor/soloud/src/backend/jack/soloud_jack.cpp".}
 {.compile: "vendor/soloud/src/backend/miniaudio/soloud_miniaudio.cpp".}
-# {.compile: "vendor/soloud/src/backend/nosound/soloud_nosound.cpp".}
+{.compile: "vendor/soloud/src/backend/nosound/soloud_nosound.cpp".}
 {.compile: "vendor/soloud/src/backend/null/soloud_null.cpp".}
 # {.compile: "vendor/soloud/src/backend/openal/soloud_openal.cpp".}
 # {.compile: "vendor/soloud/src/backend/opensles/soloud_opensles.cpp".}

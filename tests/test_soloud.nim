@@ -4,12 +4,14 @@ import unittest
 import ../src/null0/soloud
 import ../src/null0/physfs
 
+const sound_engine = NOSOUND
+
 suite "Soloud":
   test "text":
     let sl = Soloud_create()
     defer: Soloud_cleanup(sl)
 
-    discard Soloud_init(sl)
+    discard Soloud_initEx(sl, CLIP_ROUNDOFF, sound_engine, 44100, 0, 2)
     Soloud_setGlobalVolume(sl, 3.0)
 
     let speech = Speech_create()
@@ -25,7 +27,7 @@ suite "Soloud":
     let sl = Soloud_create()
     defer: Soloud_cleanup(sl)
 
-    discard Soloud_init(sl)
+    discard Soloud_initEx(sl, CLIP_ROUNDOFF, sound_engine, 44100, 0, 2)
     Soloud_setGlobalVolume(sl, 3.0)
 
     let wav = Wav_create()
@@ -41,7 +43,7 @@ suite "Soloud":
     let sl = Soloud_create()
     defer: Soloud_cleanup(sl)
 
-    discard Soloud_init(sl)
+    discard Soloud_initEx(sl, CLIP_ROUNDOFF, sound_engine, 44100, 0, 2)
     Soloud_setGlobalVolume(sl, 3.0)
 
     let wav = Wav_create()
@@ -62,7 +64,7 @@ suite "Soloud":
     let sl = Soloud_create()
     defer: Soloud_cleanup(sl)
 
-    discard Soloud_init(sl)
+    discard Soloud_initEx(sl, CLIP_ROUNDOFF, sound_engine, 44100, 0, 2)
     Soloud_setGlobalVolume(sl, 3.0)
 
     let wav = Wav_create()
