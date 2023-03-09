@@ -88,15 +88,6 @@ proc null0Import_image_crop(runtime: PRuntime; ctx: PImportContext; sp: ptr uint
   var sp = sp.stackPtrToUint()
   callHost(pntr.image_crop, sp, mem)
 
-# this should work with callHost, but it doesn't
-# proc null0Import_draw_image(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
-#   var sp = sp.stackPtrToUint()
-#   callHost(pntr.draw_image, sp, mem)
-
-# proc null0Import_draw_text(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
-#   var sp = sp.stackPtrToUint()
-#   callHost(pntr.image_crop, sp, mem)
-
 proc null0Import_draw_image(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc procImpl(dst: uint8, src: uint8, posX: cint, posY: cint) =
     pntr.draw_image(null0_images[dst], null0_images[src], posX, posY)
@@ -211,6 +202,8 @@ proc cartUpdate*(): void =
 
 proc cartUnload*(): void =
   ## call the unload() funciton in cart
+  Soloud_cleanup(null0_sound)
+  dealloc(aBuffer)
   if null0_export_unload != nil:
     null0_export_unload.call(void)
   for image in null0_images:
