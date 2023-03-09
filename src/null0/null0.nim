@@ -27,7 +27,7 @@ var null0_sound*: Soloud
 var aBuffer*: pointer
 
 const FRAME_RATE* = 60
-const SAMPLE_RATE* = 44100
+const SAMPLE_RATE* = 48000
 const SAMPLES_PER_FRAME* = SAMPLE_RATE / FRAME_RATE
 
 const BUTTON_B* = 0
@@ -241,7 +241,7 @@ proc cartLoad*(file:FileData) =
   null0_fonts[0] = load_default_font()
 
   null0_sound = Soloud_create()
-  discard Soloud_initEx(null0_sound, CLIP_ROUNDOFF, NULLDRIVER, 44100, 0, 2)
+  discard Soloud_initEx(null0_sound, CLIP_ROUNDOFF, NULLDRIVER, SAMPLE_RATE, 0, 2)
   Soloud_setGlobalVolume(null0_sound, 4.0)
   aBuffer = alloc(uint SAMPLES_PER_FRAME);
 

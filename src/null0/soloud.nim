@@ -25,24 +25,24 @@
 {.compile: "vendor/soloud/src/audiosource/wav/dr_impl.cpp".}
 {.compile: "vendor/soloud/src/audiosource/wav/soloud_wav.cpp".}
 {.compile: "vendor/soloud/src/audiosource/wav/soloud_wavstream.cpp".}
-{.compile: "vendor/soloud/src/backend/alsa/soloud_alsa.cpp".}
-{.compile: "vendor/soloud/src/backend/coreaudio/soloud_coreaudio.cpp".}
-{.compile: "vendor/soloud/src/backend/jack/soloud_jack.cpp".}
+# {.compile: "vendor/soloud/src/backend/alsa/soloud_alsa.cpp".}
+# {.compile: "vendor/soloud/src/backend/coreaudio/soloud_coreaudio.cpp".}
+# {.compile: "vendor/soloud/src/backend/jack/soloud_jack.cpp".}
 {.compile: "vendor/soloud/src/backend/miniaudio/soloud_miniaudio.cpp".}
-{.compile: "vendor/soloud/src/backend/nosound/soloud_nosound.cpp".}
+# {.compile: "vendor/soloud/src/backend/nosound/soloud_nosound.cpp".}
 {.compile: "vendor/soloud/src/backend/null/soloud_null.cpp".}
-{.compile: "vendor/soloud/src/backend/openal/soloud_openal.cpp".}
-{.compile: "vendor/soloud/src/backend/opensles/soloud_opensles.cpp".}
-{.compile: "vendor/soloud/src/backend/oss/soloud_oss.cpp".}
-{.compile: "vendor/soloud/src/backend/portaudio/soloud_portaudio.cpp".}
-{.compile: "vendor/soloud/src/backend/sdl/soloud_sdl1.cpp".}
-{.compile: "vendor/soloud/src/backend/sdl/soloud_sdl2.cpp".}
-{.compile: "vendor/soloud/src/backend/sdl2_static/soloud_sdl2_static.cpp".}
-{.compile: "vendor/soloud/src/backend/sdl_static/soloud_sdl_static.cpp".}
+# {.compile: "vendor/soloud/src/backend/openal/soloud_openal.cpp".}
+# {.compile: "vendor/soloud/src/backend/opensles/soloud_opensles.cpp".}
+# {.compile: "vendor/soloud/src/backend/oss/soloud_oss.cpp".}
+# {.compile: "vendor/soloud/src/backend/portaudio/soloud_portaudio.cpp".}
+# {.compile: "vendor/soloud/src/backend/sdl/soloud_sdl1.cpp".}
+# {.compile: "vendor/soloud/src/backend/sdl/soloud_sdl2.cpp".}
+# {.compile: "vendor/soloud/src/backend/sdl2_static/soloud_sdl2_static.cpp".}
+# {.compile: "vendor/soloud/src/backend/sdl_static/soloud_sdl_static.cpp".}
 # {.compile: "vendor/soloud/src/backend/vita_homebrew/soloud_vita_homebrew.cpp".} 
-{.compile: "vendor/soloud/src/backend/wasapi/soloud_wasapi.cpp".}
-{.compile: "vendor/soloud/src/backend/winmm/soloud_winmm.cpp".}
-{.compile: "vendor/soloud/src/backend/xaudio2/soloud_xaudio2.cpp".}
+# {.compile: "vendor/soloud/src/backend/wasapi/soloud_wasapi.cpp".}
+# {.compile: "vendor/soloud/src/backend/winmm/soloud_winmm.cpp".}
+# {.compile: "vendor/soloud/src/backend/xaudio2/soloud_xaudio2.cpp".}
 {.compile: "vendor/soloud/src/core/soloud_audiosource.cpp".}
 {.compile: "vendor/soloud/src/core/soloud_bus.cpp".}
 {.compile: "vendor/soloud/src/core/soloud_core_3d.cpp".}
