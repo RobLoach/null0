@@ -15,6 +15,9 @@ sudo apt install -y emscripten nim
 Now you can do some stuff:
 
 ```sh
+# Get the dependencies
+git submodule update --init
+
 # install tools/libs
 nimble install -d
 
