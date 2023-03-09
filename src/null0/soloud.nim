@@ -1,4 +1,4 @@
-{.passC: "-Ivendor/soloud/src/ -Ivendor/soloud/include/ -DWITH_NULL".}
+{.passC: "-Ivendor/soloud/src/ -Ivendor/soloud/include/ -DWITH_NULL -DWITH_MINIAUDIO".}
 
 {.compile: "vendor/soloud/src/audiosource/openmpt/soloud_openmpt.cpp".}
 {.compile: "vendor/soloud/src/audiosource/openmpt/soloud_openmpt_dll.c".}

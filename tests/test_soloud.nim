@@ -4,9 +4,6 @@ import unittest
 import ../src/null0/soloud
 import ../src/null0/physfs
 
-# discard Soloud_initEx(sl, CLIP_ROUNDOFF, MINIAUDIO, 44100, 0, 2)
-# discard Soloud_initEx(sl, CLIP_ROUNDOFF, NULLDRIVER, 44100, 0, 2)
-
 suite "Soloud":
   test "text":
     let sl = Soloud_create()
