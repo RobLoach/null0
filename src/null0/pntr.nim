@@ -3,8 +3,8 @@
 {.emit: """
 #define PNTR_IMPLEMENTATION
 #define PNTR_PIXELFORMAT_ARGB
-#define PNTR_SUPPORT_DEFAULT_FONT
-#define PNTR_SUPPORT_TTF
+#define PNTR_ENABLE_DEFAULT_FONT
+#define PNTR_ENABLE_TTF
 
 /*
 PNTR_LOAD_FILE macro should match, for easier physfs
