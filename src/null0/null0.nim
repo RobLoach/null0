@@ -90,7 +90,8 @@ proc null0Import_image_crop(runtime: PRuntime; ctx: PImportContext; sp: ptr uint
 
 proc null0Import_draw_image(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc procImpl(dst: uint8, src: uint8, posX: cint, posY: cint) =
-    pntr.draw_image(null0_images[dst], null0_images[src], posX, posY)
+    if not isNil(null0_images[dst]) and not isNil(null0_images[src]):
+      pntr.draw_image(null0_images[dst], null0_images[src], posX, posY)
   var sp = sp.stackPtrToUint()
   callHost(procImpl, sp, mem)
 

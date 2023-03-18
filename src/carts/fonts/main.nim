@@ -10,10 +10,10 @@ proc load() {.null0.} =
 
 proc update() {.null0.} =
   clear_background(BLACK)
-  draw_text("Default Font!", 160, 120)
-  draw_text(bmFont, "BM Font example", 100, 100)
-  draw_text(ttyFont, "TTY Font example", 10, 10)
-  draw_text(ttfFont, "TTF Font example", 100, 50)
+  draw_text("Default Font!", 10, 20)
+  draw_text(bmFont, "BM Font example", 10, 50)
+  draw_text(ttyFont, "TTY Font example", 10, 80)
+  draw_text(ttfFont, "TTF Font example", 10, 120)
   
 
 proc unload() {.null0.} =
