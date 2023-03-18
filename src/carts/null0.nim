@@ -154,4 +154,4 @@ proc load_speech*(text: cstring): uint8 =
   load_speech(currentSound, text)
   return currentSound
 
-proc play_sound*(dsdt: uint8){.importc, cdecl.}
+proc play_sound*(dst: uint8){.importc, cdecl.}
