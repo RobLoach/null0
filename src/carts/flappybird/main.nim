@@ -1,11 +1,29 @@
-var bird:uint8
+var bird0: uint8
+var bird1: uint8
+var bird2: uint8
+var font_bignumbers: uint8
+var font_pixel_18x16: uint8
+var land: uint8
+var logo: uint8
+var pipe_bottom: uint8
+var pipe_top: uint8
+var sky: uint8
 
 proc load() {.null0.} =
-  echo "Hello from draw."
-  bird = load_image("/assets/bird0.png")
+  bird0 = load_image("assets/bird0.png")
+  bird1 = load_image("assets/bird1.png")
+  bird2 = load_image("assets/bird2.png")
+  font_bignumbers = load_image("assets/font_bignumbers.png")
+  font_pixel_18x16 = load_image("assets/font_pixel-18x16.png")
+  land = load_image("assets/land.png")
+  logo = load_image("assets/logo.png")
+  pipe_bottom = load_image("assets/pipe-bottom.png")
+  pipe_top = load_image("assets/pipe-top.png")
+  sky = load_image("assets/sky.png")
 
 proc update() {.null0.} =
-  draw_image(bird, 64, 47)
+  draw_image(sky, 0, 0)
+  draw_image(land, 0, 200)
 
 proc unload() {.null0.} =
   echo "Ok, bye."

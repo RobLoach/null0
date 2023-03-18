@@ -92,30 +92,45 @@ proc null0Import_draw_image(runtime: PRuntime; ctx: PImportContext; sp: ptr uint
   proc procImpl(dst: uint8, src: uint8, posX: cint, posY: cint) =
     if not isNil(null0_images[dst]) and not isNil(null0_images[src]):
       pntr.draw_image(null0_images[dst], null0_images[src], posX, posY)
+      let err = pntr.get_error()
+      if not isNil(err):
+        echo "draw_image error: ", err
   var sp = sp.stackPtrToUint()
   callHost(procImpl, sp, mem)
 
 proc null0Import_draw_text(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc procImpl(dst: uint8, font: uint8, text: cstring, posX: cint, posY: cint) =
     pntr.draw_text(null0_images[dst], null0_fonts[font], text, posX, posY)
+    let err = pntr.get_error()
+    if not isNil(err):
+      echo "draw_text error: ", err
   var sp = sp.stackPtrToUint()
   callHost(procImpl, sp, mem)
 
 proc null0Import_gradient_vertical(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc procImpl(dst: uint8, width: cint; height: cint; top: pntr_color; bottom: pntr_color) =
     null0_images[dst] = gen_image_gradient_vertical(width, height, top, bottom)
+    let err = pntr.get_error()
+    if not isNil(err):
+      echo "gradient_vertical error: ", err
   var sp = sp.stackPtrToUint()
   callHost(procImpl, sp, mem)
 
 proc null0Import_gradient_horizontal(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc procImpl(dst: uint8, width: cint; height: cint; left: pntr_color; right: pntr_color) =
     null0_images[dst] = gen_image_gradient_horizontal(width, height, left, right)
+    let err = pntr.get_error()
+    if not isNil(err):
+      echo "gradient_horizontal error: ", err
   var sp = sp.stackPtrToUint()
   callHost(procImpl, sp, mem)
 
 proc null0Import_image_copy(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc procImpl(destination: uint8, source: uint8): uint8 =
     null0_images[destination] = pntr.image_copy(null0_images[source])
+    let err = pntr.get_error()
+    if not isNil(err):
+      echo "image_copy error: ", err
   var sp = sp.stackPtrToUint()
   callHost(procImpl, sp, mem)
 
@@ -123,6 +138,9 @@ proc null0Import_load_image(runtime: PRuntime; ctx: PImportContext; sp: ptr uint
   proc procImpl(destination: uint8, filename: cstring) =
     var f = physfs.read($filename)
     null0_images[destination] = pntr.load_image_from_memory(f.data, cuint f.length)
+    let err = pntr.get_error()
+    if not isNil(err):
+      echo "load_image error: ", err
   var sp = sp.stackPtrToUint()
   callHost(procImpl, sp, mem)
 
@@ -130,6 +148,9 @@ proc null0Import_load_font_bmfont(runtime: PRuntime; ctx: PImportContext; sp: pt
   proc procImpl(destination: uint8, filename: cstring, characters: cstring) =
     var f = physfs.read($filename)
     null0_fonts[destination] = pntr.load_bmfont_from_memory(f.data, cuint f.length, characters)
+    let err = pntr.get_error()
+    if not isNil(err):
+      echo "load_font_bmfont error: ", err
   var sp = sp.stackPtrToUint()
   callHost(procImpl, sp, mem)
 
@@ -137,6 +158,9 @@ proc null0Import_load_font_ttyfont(runtime: PRuntime; ctx: PImportContext; sp: p
   proc procImpl(destination: uint8, filename: cstring, glyphWidth: cint, glyphHeight: cint, characters: cstring) =
     var f = physfs.read($filename)
     null0_fonts[destination] = pntr.load_ttyfont_from_memory(f.data, cuint f.length, glyphWidth, glyphHeight, characters)
+    let err = pntr.get_error()
+    if not isNil(err):
+      echo "load_font_ttyfont error: ", err
   var sp = sp.stackPtrToUint()
   callHost(procImpl, sp, mem)
 
@@ -144,7 +168,9 @@ proc null0Import_load_font_ttffont(runtime: PRuntime; ctx: PImportContext; sp: p
   proc procImpl(destination: uint8, filename: cstring, fontSize: cint, fontColor: pntr_color) =
     var f = physfs.read($filename)
     null0_fonts[destination] = pntr.load_ttffont_from_memory(f.data, cuint f.length, fontSize, fontColor)
-    # null0_fonts[destination] = pntr.load_ttffont("./vendor/pntr/examples/resources/tuffy.ttf", 20, WHITE)
+    let err = pntr.get_error()
+    if not isNil(err):
+      echo "load_font_ttffont error: ", err
   var sp = sp.stackPtrToUint()
   callHost(procImpl, sp, mem)
 

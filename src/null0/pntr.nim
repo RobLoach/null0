@@ -1,4 +1,4 @@
-{.passC: "-Ivendor/".}
+{.passC: "-Ivendor/ -DPNTR_SUPPORT_DEFAULT_FONT".}
 
 {.emit: """
 #define PNTR_IMPLEMENTATION
