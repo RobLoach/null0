@@ -134,6 +134,15 @@ proc null0Import_image_copy(runtime: PRuntime; ctx: PImportContext; sp: ptr uint
   var sp = sp.stackPtrToUint()
   callHost(procImpl, sp, mem)
 
+proc null0Import_image_scale(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
+  proc procImpl(destination: uint8, source: uint8, scaleX: cfloat, scaleY: cfloat) =
+    null0_images[destination] = pntr.image_scale(null0_images[source], scaleX, scaleY, PNTR_FILTER_DEFAULT)
+    let err = pntr.get_error()
+    if not isNil(err):
+      echo "image_scale error: ", err
+  var sp = sp.stackPtrToUint()
+  callHost(procImpl, sp, mem)
+
 proc null0Import_load_image(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc procImpl(destination: uint8, filename: cstring) =
     var f = physfs.read($filename)
@@ -194,6 +203,7 @@ proc null0Import_play_sound(runtime: PRuntime; ctx: PImportContext; sp: ptr uint
     discard Soloud_play(null0_sound, null0_sounds[destination])
   var sp = sp.stackPtrToUint()
   callHost(procImpl, sp, mem)
+
 
 
 proc isZip*(bytes: string): bool =
@@ -358,6 +368,10 @@ proc cartLoad*(file:FileData) =
     discard
   try:
     checkWasmRes m3_LinkRawFunction(module, "*", "play_sound", "v(i)", null0Import_play_sound)
+  except WasmError:
+    discard
+  try:
+    checkWasmRes m3_LinkRawFunction(module, "*", "image_scale", "v(iiff)", null0Import_image_scale)
   except WasmError:
     discard
 

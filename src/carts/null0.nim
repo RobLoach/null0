@@ -155,3 +155,13 @@ proc load_speech*(text: cstring): uint8 =
   return currentSound
 
 proc play_sound*(dst: uint8){.importc, cdecl.}
+
+proc image_scale*(dst: uint8, src: uint8, scaleX: cfloat, scaleY: cfloat){.importc, cdecl.}
+proc image_scale*(src: uint8, scaleX: cfloat, scaleY: cfloat): uint8 =
+  currentImage = currentImage + 1
+  image_scale(currentImage, src, scaleX, scaleY)
+  return currentImage
+proc image_scale*(src: uint8, scale: cfloat): uint8 =
+  currentImage = currentImage + 1
+  image_scale(currentImage, src, scale, scale)
+  return currentImage

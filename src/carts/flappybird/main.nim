@@ -18,7 +18,7 @@ proc load() {.null0.} =
   logo = load_image("assets/logo.png")
   pipe_bottom = load_image("assets/pipe-bottom.png")
   pipe_top = load_image("assets/pipe-top.png")
-  sky = load_image("assets/sky.png")
+  sky = image_scale(load_image("assets/sky.png"), 2.0)
 
   font_pixel_18x16 = load_font_tty("assets/font_pixel-18x16.png", 18, 16, " !*+,-./0123\"456789:;<=#>?@ABCDEFG$HIJKLMNOPQ%RSTUVWXYZ[&\\]^_`'(){|}~")
   font_bignumbers = load_font_tty("assets/font_bignumbers.png", 24, 36, "0123456789")
