@@ -239,7 +239,6 @@ proc cartUpdate*(): void =
   ## call the update() funciton in cart
   var dt = now() - null0_time
   if null0_export_update != nil:
-    echo dt.inMilliseconds
     null0_export_update.call(void, dt.inMilliseconds)
 
 proc cartUnload*(): void =

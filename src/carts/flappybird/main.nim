@@ -3,6 +3,7 @@ var logo: uint8
 var pipe_bottom: uint8
 var pipe_top: uint8
 var sky: uint8
+import std/math
 
 var bird:array[3, uint8]
 
@@ -23,10 +24,11 @@ proc load() {.null0.} =
   font_bignumbers = load_font_tty("assets/font_bignumbers.png", 24, 36, "0123456789")
 
 proc update(dt: uint) {.null0.} =
+  let s = sin(float (int(dt)/100))
   draw_image(sky, 0, 0)
   draw_image(land, 0, 200)
   draw_text(font_pixel_18x16, "FLAPPYBIRD", 80, 20)
-  draw_image(bird[0], 50, 50)
+  draw_image(bird[0], int(s * 50) + 150 , int(s * 50) + 100)
   # draw_text(font_bignumbers, $(int(dt)), 10, 20)
 
 
