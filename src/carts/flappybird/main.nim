@@ -28,10 +28,10 @@ proc update(dt: uint) {.null0.} =
   let f = int(int(dt) / 100) mod 3
   let landx = 336 - (int(int(dt)/10) mod 336)
   draw_image(sky, 0, 0)
-  draw_image(land, landx, 200)
-  draw_image(land, landx - 336, 200)
   draw_image(pipe_top , landx-50, -400)
   draw_image(pipe_bottom , landx-50, 150)
+  draw_image(land, landx, 200)
+  draw_image(land, landx - 336, 200)
   draw_image(bird[f], 150 , int(s * 50) + 100)
   draw_image(logo, 70, 80)
   draw_text(font_pixel_18x16, "IN NULL0", 90, 140)
