@@ -15,7 +15,7 @@ proc load() {.null0.} =
   bird[1] = load_image("assets/bird1.png")
   bird[2] = load_image("assets/bird2.png")
   land = load_image("assets/land.png")
-  logo = load_image("assets/logo.png")
+  logo = image_scale(load_image("assets/logo.png"), 0.5)
   pipe_bottom = load_image("assets/pipe-bottom.png")
   pipe_top = load_image("assets/pipe-top.png")
   sky = image_scale(load_image("assets/sky.png"), 2.0)
@@ -24,11 +24,14 @@ proc load() {.null0.} =
   font_bignumbers = load_font_tty("assets/font_bignumbers.png", 24, 36, "0123456789")
 
 proc update(dt: uint) {.null0.} =
-  let s = sin(float (int(dt)/100))
+  let s = sin(float (int(dt)/200))
+  let f = int(int(dt) / 100) mod 3
+  let landx = 336 - (int(int(dt)/10) mod 336)
   draw_image(sky, 0, 0)
-  draw_image(land, 0, 200)
-  draw_text(font_pixel_18x16, "FLAPPYBIRD", 80, 20)
-  draw_image(bird[0], int(s * 50) + 150 , int(s * 50) + 100)
-  # draw_text(font_bignumbers, $(int(dt)), 10, 20)
-
-
+  draw_image(land, landx, 200)
+  draw_image(land, landx - 336, 200)
+  draw_image(pipe_top , landx-50, -400)
+  draw_image(pipe_bottom , landx-50, 150)
+  draw_image(bird[f], 150 , int(s * 50) + 100)
+  draw_image(logo, 70, 80)
+  draw_text(font_pixel_18x16, "IN NULL0", 90, 140)

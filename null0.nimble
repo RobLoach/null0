@@ -33,7 +33,7 @@ task libretro, "Build libretro host":
 task cart, "Build a demo cart":
   let name = paramStr(paramCount())
   let dir = "src/carts/" & name
-  exec(fmt"cd {dir} && nim c main.nim && zip ../../../{name}.null0 -r main.wasm assets/ && mv main.wasm ../../../{name}.wasm")
+  exec(fmt"cd {dir} && nim c main.nim && zip ../../../{name}.null0 -r main.wasm assets/ -x '*.DS_Store' && mv main.wasm ../../../{name}.wasm")
 
 task carts, "Builds all demo carts":
   for dir in listDirs("src/carts"):
