@@ -6,6 +6,7 @@ import wasm3/wasm3c
 import pntr
 import std/strformat
 import soloud
+import std/times
 
 type
   Null0Buttons* = array[16, bool]
@@ -25,6 +26,8 @@ var null0_sounds*:array[255, pointer]
 var null0_buttons*: Null0Buttons
 var null0_sound*: Soloud
 var aBuffer*: pointer
+
+var null0_time = now()
 
 const FRAME_RATE* = 60
 const SAMPLE_RATE* = 48000
@@ -234,8 +237,10 @@ proc isZip*(f:FileData): bool =
 
 proc cartUpdate*(): void =
   ## call the update() funciton in cart
+  var dt = now() - null0_time
   if null0_export_update != nil:
-    null0_export_update.call(void)
+    echo dt.inMilliseconds
+    null0_export_update.call(void, dt.inMilliseconds)
 
 proc cartUnload*(): void =
   ## call the unload() funciton in cart

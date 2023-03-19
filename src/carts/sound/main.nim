@@ -9,7 +9,7 @@ proc load*() {.null0.} =
   forgotten_spaceship = load_sound("/assets/forgotten_spaceship.ogg")
   play_sound(forgotten_spaceship)
   
-proc update() {.null0.} =
+proc update(dt: uint) {.null0.} =
   draw_text("Press A / B", 100, 110)
 
 proc buttonDown(button: Button) {.null0.} =

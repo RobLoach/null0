@@ -32,7 +32,7 @@ proc buttonDown(button: Button) {.null0.} =
 proc buttonUp(button: Button) {.null0.} =
   buttonState[ord button] = false
 
-proc update() {.null0.} =
+proc update(dt: uint) {.null0.} =
   draw_image(grad, 0, 0)
   draw_image(bg, 0, 50)
   for b, state in pairs(buttonState):

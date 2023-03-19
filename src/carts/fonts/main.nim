@@ -8,7 +8,7 @@ proc load() {.null0.} =
   ttyFont = load_font_tty("assets/ttyfont-16x16.png", 16, 16, "\x7f !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
   ttfFont = load_font_ttf("assets/tuffy.ttf", 25, GREEN)
 
-proc update() {.null0.} =
+proc update(dt: uint) {.null0.} =
   clear_background(BLACK)
   draw_text("Default Font!", 10, 20)
   draw_text(bmFont, "BM Font example", 10, 50)
