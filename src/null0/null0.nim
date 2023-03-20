@@ -209,8 +209,7 @@ proc null0Import_play_sound(runtime: PRuntime; ctx: PImportContext; sp: ptr uint
 
 proc null0Import_set_sound_loop(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc procImpl(destination: uint8, loop: bool) =
-    echo "loop", destination, loop
-    # Soloud_setLooping(null0_sound, destination, loop)
+    Wav_setLooping(null0_sounds[destination], loop)
   var sp = sp.stackPtrToUint()
   callHost(procImpl, sp, mem)
 
@@ -391,6 +390,10 @@ proc cartLoad*(file:FileData) =
     discard
   try:
     checkWasmRes m3_LinkRawFunction(module, "*", "stop_sound", "v(i)", null0Import_stop_sound)
+  except WasmError:
+    discard
+  try:
+    checkWasmRes m3_LinkRawFunction(module, "*", "set_sound_loop", "v(ii)", null0Import_set_sound_loop)
   except WasmError:
     discard
 
