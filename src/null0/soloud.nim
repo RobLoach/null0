@@ -208,7 +208,7 @@ proc Soloud_getLooping*(aSoloud: Soloud; aVoiceHandle: cuint): cint
 proc Soloud_getAutoStop*(aSoloud: Soloud; aVoiceHandle: cuint): cint
 proc Soloud_getLoopPoint*(aSoloud: Soloud; aVoiceHandle: cuint): cdouble
 proc Soloud_setLoopPoint*(aSoloud: Soloud; aVoiceHandle: cuint; aLoopPoint: cdouble)
-proc Soloud_setLooping*(aSoloud: Soloud; aVoiceHandle: cuint; aLooping: cint)
+proc Soloud_setLooping*(aSoloud: Soloud; aVoiceHandle: cuint; aLooping: bool)
 proc Soloud_setAutoStop*(aSoloud: Soloud; aVoiceHandle: cuint; aAutoStop: cint)
 proc Soloud_setMaxActiveVoiceCount*(aSoloud: Soloud; aVoiceCount: cuint): cint
 proc Soloud_setInaudibleBehavior*(aSoloud: Soloud; aVoiceHandle: cuint; aMustTick: cint; aKill: cint)
@@ -273,7 +273,7 @@ proc Soloud_mixSigned16*(aSoloud: Soloud; aBuffer: pointer; aSamples: cuint)
 proc Ay_destroy*(aAy: Ay)
 proc Ay_create*(): Ay
 proc Ay_setVolume*(aAy: Ay; aVolume: cfloat)
-proc Ay_setLooping*(aAy: Ay; aLoop: cint)
+proc Ay_setLooping*(aAy: Ay; aLoop: bool)
 proc Ay_setAutoStop*(aAy: Ay; aAutoStop: cint)
 proc Ay_set3dMinMaxDistance*(aAy: Ay; aMinDistance: cfloat; aMaxDistance: cfloat)
 proc Ay_set3dAttenuation*(aAy: Ay; aAttenuationModel: cuint; aAttenuationRolloffFactor: cfloat)
@@ -340,7 +340,7 @@ proc Bus_getActiveVoiceCount*(aBus: Bus): cuint
 proc Bus_getResampler*(aBus: Bus): cuint
 proc Bus_setResampler*(aBus: Bus; aResampler: cuint)
 proc Bus_setVolume*(aBus: Bus; aVolume: cfloat)
-proc Bus_setLooping*(aBus: Bus; aLoop: cint)
+proc Bus_setLooping*(aBus: Bus; aLoop: bool)
 proc Bus_setAutoStop*(aBus: Bus; aAutoStop: cint)
 proc Bus_set3dMinMaxDistance*(aBus: Bus; aMinDistance: cfloat; aMaxDistance: cfloat)
 proc Bus_set3dAttenuation*(aBus: Bus; aAttenuationModel: cuint; aAttenuationRolloffFactor: cfloat)
@@ -447,7 +447,7 @@ proc Monotone_loadMem*(aMonotone: Monotone; aMem: uint8; aLength: cuint): cint
 proc Monotone_loadMemEx*(aMonotone: Monotone; aMem: uint8; aLength: cuint; aCopy: cint;  aTakeOwnership: cint): cint
 proc Monotone_loadFile*(aMonotone: Monotone; aFile: File): cint
 proc Monotone_setVolume*(aMonotone: Monotone; aVolume: cfloat)
-proc Monotone_setLooping*(aMonotone: Monotone; aLoop: cint)
+proc Monotone_setLooping*(aMonotone: Monotone; aLoop: bool)
 proc Monotone_setAutoStop*(aMonotone: Monotone; aAutoStop: cint)
 proc Monotone_set3dMinMaxDistance*(aMonotone: Monotone; aMinDistance: cfloat; aMaxDistance: cfloat)
 proc Monotone_set3dAttenuation*(aMonotone: Monotone; aAttenuationModel: cuint; aAttenuationRolloffFactor: cfloat)
@@ -472,7 +472,7 @@ proc Noise_create*(): Noise
 proc Noise_setOctaveScale*(aNoise: Noise; aOct0: cfloat; aOct1: cfloat; aOct2: cfloat; aOct3: cfloat; aOct4: cfloat; aOct5: cfloat; aOct6: cfloat; aOct7: cfloat; aOct8: cfloat; aOct9: cfloat)
 proc Noise_setType*(aNoise: Noise; aType: cint)
 proc Noise_setVolume*(aNoise: Noise; aVolume: cfloat)
-proc Noise_setLooping*(aNoise: Noise; aLoop: cint)
+proc Noise_setLooping*(aNoise: Noise; aLoop: bool)
 proc Noise_setAutoStop*(aNoise: Noise; aAutoStop: cint)
 proc Noise_set3dMinMaxDistance*(aNoise: Noise; aMinDistance: cfloat; aMaxDistance: cfloat)
 proc Noise_set3dAttenuation*(aNoise: Noise; aAttenuationModel: cuint; aAttenuationRolloffFactor: cfloat)
@@ -499,7 +499,7 @@ proc Openmpt_loadMem*(aOpenmpt: Openmpt; aMem: uint8; aLength: cuint): cint
 proc Openmpt_loadMemEx*(aOpenmpt: Openmpt; aMem: uint8; aLength: cuint; aCopy: cint;  aTakeOwnership: cint): cint
 proc Openmpt_loadFile*(aOpenmpt: Openmpt; aFile: File): cint
 proc Openmpt_setVolume*(aOpenmpt: Openmpt; aVolume: cfloat)
-proc Openmpt_setLooping*(aOpenmpt: Openmpt; aLoop: cint)
+proc Openmpt_setLooping*(aOpenmpt: Openmpt; aLoop: bool)
 proc Openmpt_setAutoStop*(aOpenmpt: Openmpt; aAutoStop: cint)
 proc Openmpt_set3dMinMaxDistance*(aOpenmpt: Openmpt; aMinDistance: cfloat; aMaxDistance: cfloat)
 proc Openmpt_set3dAttenuation*(aOpenmpt: Openmpt; aAttenuationModel: cuint; aAttenuationRolloffFactor: cfloat)
@@ -528,7 +528,7 @@ proc Queue_setParamsFromAudioSource*(aQueue: Queue; aSound: AudioSource): cint
 proc Queue_setParams*(aQueue: Queue; aSamplerate: cfloat): cint
 proc Queue_setParamsEx*(aQueue: Queue; aSamplerate: cfloat; aChannels: cuint): cint
 proc Queue_setVolume*(aQueue: Queue; aVolume: cfloat)
-proc Queue_setLooping*(aQueue: Queue; aLoop: cint)
+proc Queue_setLooping*(aQueue: Queue; aLoop: bool)
 proc Queue_setAutoStop*(aQueue: Queue; aAutoStop: cint)
 proc Queue_set3dMinMaxDistance*(aQueue: Queue; aMinDistance: cfloat; aMaxDistance: cfloat)
 proc Queue_set3dAttenuation*(aQueue: Queue; aAttenuationModel: cuint; aAttenuationRolloffFactor: cfloat)
@@ -570,7 +570,7 @@ proc Sfxr_loadParamsMemEx*(aSfxr: Sfxr; aMem: uint8; aLength: cuint; aCopy: cint
 proc Sfxr_loadParamsFile*(aSfxr: Sfxr; aFile: File): cint
 proc Sfxr_loadPreset*(aSfxr: Sfxr; aPresetNo: cint; aRandSeed: cint): cint
 proc Sfxr_setVolume*(aSfxr: Sfxr; aVolume: cfloat)
-proc Sfxr_setLooping*(aSfxr: Sfxr; aLoop: cint)
+proc Sfxr_setLooping*(aSfxr: Sfxr; aLoop: bool)
 proc Sfxr_setAutoStop*(aSfxr: Sfxr; aAutoStop: cint)
 proc Sfxr_set3dMinMaxDistance*(aSfxr: Sfxr; aMinDistance: cfloat; aMaxDistance: cfloat)
 proc Sfxr_set3dAttenuation*(aSfxr: Sfxr; aAttenuationModel: cuint; aAttenuationRolloffFactor: cfloat)
@@ -596,7 +596,7 @@ proc Speech_setText*(aSpeech: Speech; aText: cstring): cint
 proc Speech_setParams*(aSpeech: Speech): cint
 proc Speech_setParamsEx*(aSpeech: Speech; aBaseFrequency: cuint;  aBaseSpeed: cfloat;  aBaseDeclination: cfloat;  aBaseWaveform: cint): cint
 proc Speech_setVolume*(aSpeech: Speech; aVolume: cfloat)
-proc Speech_setLooping*(aSpeech: Speech; aLoop: cint)
+proc Speech_setLooping*(aSpeech: Speech; aLoop: bool)
 proc Speech_setAutoStop*(aSpeech: Speech; aAutoStop: cint)
 proc Speech_set3dMinMaxDistance*(aSpeech: Speech; aMinDistance: cfloat; aMaxDistance: cfloat)
 proc Speech_set3dAttenuation*(aSpeech: Speech; aAttenuationModel: cuint; aAttenuationRolloffFactor: cfloat)
@@ -623,7 +623,7 @@ proc TedSid_loadMem*(aTedSid: TedSid; aMem: uint8; aLength: cuint): cint
 proc TedSid_loadMemEx*(aTedSid: TedSid; aMem: uint8; aLength: cuint; aCopy: cint;  aTakeOwnership: cint): cint
 proc TedSid_loadFile*(aTedSid: TedSid; aFile: File): cint
 proc TedSid_setVolume*(aTedSid: TedSid; aVolume: cfloat)
-proc TedSid_setLooping*(aTedSid: TedSid; aLoop: cint)
+proc TedSid_setLooping*(aTedSid: TedSid; aLoop: bool)
 proc TedSid_setAutoStop*(aTedSid: TedSid; aAutoStop: cint)
 proc TedSid_set3dMinMaxDistance*(aTedSid: TedSid; aMinDistance: cfloat; aMaxDistance: cfloat)
 proc TedSid_set3dAttenuation*(aTedSid: TedSid; aAttenuationModel: cuint; aAttenuationRolloffFactor: cfloat)
@@ -650,7 +650,7 @@ proc Vic_getModel*(aVic: Vic): cint
 proc Vic_setRegister*(aVic: Vic; reg: cint; value: uint8)
 proc Vic_getRegister*(aVic: Vic; reg: cint): uint8
 proc Vic_setVolume*(aVic: Vic; aVolume: cfloat)
-proc Vic_setLooping*(aVic: Vic; aLoop: cint)
+proc Vic_setLooping*(aVic: Vic; aLoop: bool)
 proc Vic_setAutoStop*(aVic: Vic; aAutoStop: cint)
 proc Vic_set3dMinMaxDistance*(aVic: Vic; aMinDistance: cfloat; aMaxDistance: cfloat)
 proc Vic_set3dAttenuation*(aVic: Vic; aAttenuationModel: cuint; aAttenuationRolloffFactor: cfloat)
@@ -674,7 +674,7 @@ proc Vizsn_destroy*(aVizsn: Vizsn)
 proc Vizsn_create*(): Vizsn
 proc Vizsn_setText*(aVizsn: Vizsn; aText: cstring)
 proc Vizsn_setVolume*(aVizsn: Vizsn; aVolume: cfloat)
-proc Vizsn_setLooping*(aVizsn: Vizsn; aLoop: cint)
+proc Vizsn_setLooping*(aVizsn: Vizsn; aLoop: bool)
 proc Vizsn_setAutoStop*(aVizsn: Vizsn; aAutoStop: cint)
 proc Vizsn_set3dMinMaxDistance*(aVizsn: Vizsn; aMinDistance: cfloat; aMaxDistance: cfloat)
 proc Vizsn_set3dAttenuation*(aVizsn: Vizsn; aAttenuationModel: cuint; aAttenuationRolloffFactor: cfloat)
@@ -708,7 +708,7 @@ proc Wav_loadRawWave*(aWav: Wav; aMem: cfloat; aLength: cuint): cint
 proc Wav_loadRawWaveEx*(aWav: Wav; aMem: cfloat; aLength: cuint; aSamplerate: cfloat;  aChannels: cuint;  aCopy: cint;  aTakeOwnership: cint): cint
 proc Wav_getLength*(aWav: Wav): cdouble
 proc Wav_setVolume*(aWav: Wav; aVolume: cfloat)
-proc Wav_setLooping*(aWav: Wav; aLoop: cint)
+proc Wav_setLooping*(aWav: Wav; aLoop: bool)
 proc Wav_setAutoStop*(aWav: Wav; aAutoStop: cint)
 proc Wav_set3dMinMaxDistance*(aWav: Wav; aMinDistance: cfloat; aMaxDistance: cfloat)
 proc Wav_set3dAttenuation*(aWav: Wav; aAttenuationModel: cuint; aAttenuationRolloffFactor: cfloat)
@@ -751,7 +751,7 @@ proc WavStream_loadFile*(aWavStream: WavStream; aFile: File): cint
 proc WavStream_loadFileToMem*(aWavStream: WavStream; aFile: File): cint
 proc WavStream_getLength*(aWavStream: WavStream): cdouble
 proc WavStream_setVolume*(aWavStream: WavStream; aVolume: cfloat)
-proc WavStream_setLooping*(aWavStream: WavStream; aLoop: cint)
+proc WavStream_setLooping*(aWavStream: WavStream; aLoop: bool)
 proc WavStream_setAutoStop*(aWavStream: WavStream; aAutoStop: cint)
 proc WavStream_set3dMinMaxDistance*(aWavStream: WavStream; aMinDistance: cfloat; aMaxDistance: cfloat)
 proc WavStream_set3dAttenuation*(aWavStream: WavStream; aAttenuationModel: cuint; aAttenuationRolloffFactor: cfloat)

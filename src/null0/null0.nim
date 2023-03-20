@@ -207,7 +207,18 @@ proc null0Import_play_sound(runtime: PRuntime; ctx: PImportContext; sp: ptr uint
   var sp = sp.stackPtrToUint()
   callHost(procImpl, sp, mem)
 
+proc null0Import_set_sound_loop(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
+  proc procImpl(destination: uint8, loop: bool) =
+    echo "loop", destination, loop
+    # Soloud_setLooping(null0_sound, destination, loop)
+  var sp = sp.stackPtrToUint()
+  callHost(procImpl, sp, mem)
 
+proc null0Import_stop_sound(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
+  proc procImpl(destination: uint8) =
+    Soloud_stopAudioSource(null0_sound, null0_sounds[destination])
+  var sp = sp.stackPtrToUint()
+  callHost(procImpl, sp, mem)
 
 proc isZip*(bytes: string): bool =
   ## detect if some bytes (at least 4) are a zip file
@@ -378,6 +389,12 @@ proc cartLoad*(file:FileData) =
     checkWasmRes m3_LinkRawFunction(module, "*", "image_scale", "v(iiff)", null0Import_image_scale)
   except WasmError:
     discard
+  try:
+    checkWasmRes m3_LinkRawFunction(module, "*", "stop_sound", "v(i)", null0Import_stop_sound)
+  except WasmError:
+    discard
+
+
 
   try:
     checkWasmRes m3_CompileModule(module)

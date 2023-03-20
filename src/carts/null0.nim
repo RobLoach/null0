@@ -165,3 +165,8 @@ proc image_scale*(src: uint8, scale: cfloat): uint8 =
   currentImage = currentImage + 1
   image_scale(currentImage, src, scale, scale)
   return currentImage
+
+proc set_sound_loop*(dst: uint8, loop: bool){.importc, cdecl.}
+
+proc stop_sound*(dst: uint8){.importc, cdecl.}
+
