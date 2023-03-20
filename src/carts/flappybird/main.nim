@@ -52,6 +52,10 @@ proc load() {.null0.} =
   music1 = load_sound("assets/sounds/music1.ogg")
   music2 = load_sound("assets/sounds/music2.ogg")
   music3 = load_sound("assets/sounds/music3.ogg")
+
+  set_sound_loop(music1, true)
+  set_sound_loop(music2, true)
+  set_sound_loop(music3, true)
   play_sound(music1)
   
 
@@ -59,14 +63,13 @@ proc buttonDown(button: Button) {.null0.} =
   if button == BUTTON_A:
     if state == STATE_END:
       state = STATE_INTRO
-      stop_sound(music3)
       play_sound(music1)
       return
     
     if state == STATE_PLAY:
       state = STATE_END
+      play_sound(hit)
       stop_sound(music2)
-      play_sound(music3)
       return
     
     if state == STATE_INTRO:
