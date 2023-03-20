@@ -41,7 +41,10 @@ proc load() {.null0.} =
   pipe_top = load_image("assets/pipe-top.png")
   sky = image_scale(load_image("assets/sky.png"), 2.0)
 
+  # about 18-19 fit on screen
   font_pixel_18x16 = load_font_tty("assets/font_pixel-18x16.png", 18, 16, " !*+,-./0123\"456789:;<=#>?@ABCDEFG$HIJKLMNOPQ%RSTUVWXYZ[&\\]^_`'(){|}~")
+  
+  # about 12-13 fit on screen
   font_bignumbers = load_font_tty("assets/font_bignumbers.png", 24, 36, "0123456789 ")
 
   die = load_sound("assets/sounds/die.ogg")
@@ -90,9 +93,9 @@ proc update(dt: uint) {.null0.} =
     let f = int(int(dt) / 100) mod 3
     draw_image(pipe_top , landx-50, -440)
     draw_image(pipe_bottom , landx-50, 160)
-    draw_image(bird[f], int(150), int(s * 30) + 100)
+    draw_image_rotated(bird[f], 150, int(s * 30) + 100, 45.0)
     draw_image(logo, 70, 80)
-    draw_text(font_pixel_18x16, "IN NULL0", 90, 140)
+    draw_text(font_pixel_18x16, center("NULL0", 19), 0, 140)
 
   if state == STATE_PLAY:
     # fake score increment
@@ -102,12 +105,12 @@ proc update(dt: uint) {.null0.} =
     let f = int(int(dt) / 100) mod 3
     draw_image(pipe_top , landx-50, -440)
     draw_image(pipe_bottom , landx-50, 160)
-    draw_image(bird[f], int(150), int(s * 30) + 100)
+    draw_image_rotated(bird[f], 150, int(s * 30) + 100, 45.0)
     draw_text(font_pixel_18x16, $int(score), 10, 10)
   
   if state == STATE_END:
-    draw_text(font_pixel_18x16, "YOU DIED", 90, 140)
     draw_text(font_bignumbers, center($int(score), 14), 0, 80)
+    draw_text(font_pixel_18x16, center("YOU DIED!", 19), 0, 140)
   
   draw_image(land, landx, 200)
   draw_image(land, landx - 336, 200)

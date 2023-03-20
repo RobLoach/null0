@@ -409,7 +409,7 @@ proc cartLoad*(file:FileData) =
   except WasmError:
     discard
   try:
-    checkWasmRes m3_LinkRawFunction(module, "*", "draw_image_rotated", "v(iiiiFFF)", null0Import_draw_image_rotated)
+    checkWasmRes m3_LinkRawFunction(module, "*", "draw_image_rotated", "v(iiiifff)", null0Import_draw_image_rotated)
   except WasmError:
     discard
   try:
