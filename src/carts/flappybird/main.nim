@@ -1,9 +1,12 @@
+import std/strutils
+
 var land: uint8
 var logo: uint8
 var pipe_bottom: uint8
 var pipe_top: uint8
 var sky: uint8
 import std/math
+import strformat
 
 var bird:array[3, uint8]
 
@@ -25,6 +28,7 @@ type GameState = enum
   STATE_END
 
 var state = STATE_INTRO
+var score:float = 0
 
 proc load() {.null0.} =
   bird[0] = load_image("assets/bird0.png")
@@ -37,7 +41,7 @@ proc load() {.null0.} =
   sky = image_scale(load_image("assets/sky.png"), 2.0)
 
   font_pixel_18x16 = load_font_tty("assets/font_pixel-18x16.png", 18, 16, " !*+,-./0123\"456789:;<=#>?@ABCDEFG$HIJKLMNOPQ%RSTUVWXYZ[&\\]^_`'(){|}~")
-  font_bignumbers = load_font_tty("assets/font_bignumbers.png", 24, 36, "0123456789")
+  font_bignumbers = load_font_tty("assets/font_bignumbers.png", 24, 36, "0123456789 ")
 
   die = load_sound("assets/sounds/die.ogg")
   hit = load_sound("assets/sounds/hit.ogg")
@@ -55,19 +59,19 @@ proc buttonDown(button: Button) {.null0.} =
   if button == BUTTON_A:
     if state == STATE_END:
       state = STATE_INTRO
-      echo "intro"
       stop_sound(music3)
       play_sound(music1)
       return
+    
     if state == STATE_PLAY:
       state = STATE_END
-      echo "end"
       stop_sound(music2)
       play_sound(music3)
       return
+    
     if state == STATE_INTRO:
       state = STATE_PLAY
-      echo "play"
+      score = 0
       stop_sound(music1)
       play_sound(music2)
       return
@@ -86,14 +90,19 @@ proc update(dt: uint) {.null0.} =
     draw_text(font_pixel_18x16, "IN NULL0", 90, 140)
 
   if state == STATE_PLAY:
+    # fake score increment
+    score += int(dt)/200000
+
     let s = sin(float (int(dt)/200))
     let f = int(int(dt) / 100) mod 3
     draw_image(pipe_top , landx-50, -450)
     draw_image(pipe_bottom , landx-50, 160)
     draw_image(bird[f], 150 , int(s * 30) + 100)
+    draw_text(font_pixel_18x16, $int(score), 0, 0)
   
   if state == STATE_END:
     draw_text(font_pixel_18x16, "YOU DIED", 90, 140)
+    draw_text(font_bignumbers, center($int(score), 14), 0, 80)
   
   draw_image(land, landx, 200)
   draw_image(land, landx - 336, 200)
