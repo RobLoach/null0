@@ -220,7 +220,7 @@ proc null0Import_stop_sound(runtime: PRuntime; ctx: PImportContext; sp: ptr uint
   callHost(procImpl, sp, mem)
 
 proc null0Import_draw_image_rotated(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
-  proc procImpl(dst: uint8, src: uint8, posX: cint, posY: cint, rotation: cfloat, offsetX: cfloat, offsetY: cfloat) =
+  proc procImpl(dst: uint8, src: uint8, posX: cint, posY: cint, rotation: cfloat) =
     if not isNil(null0_images[dst]) and not isNil(null0_images[src]):
       pntr.draw_image_rotated(null0_images[dst], null0_images[src], posX, posY, rotation/360.0,  float(null0_images[src].width)/2.0,  float(null0_images[src].height)/2.0, PNTR_FILTER_DEFAULT)
       let err = pntr.get_error()
@@ -409,7 +409,7 @@ proc cartLoad*(file:FileData) =
   except WasmError:
     discard
   try:
-    checkWasmRes m3_LinkRawFunction(module, "*", "draw_image_rotated", "v(iiiifff)", null0Import_draw_image_rotated)
+    checkWasmRes m3_LinkRawFunction(module, "*", "draw_image_rotated", "v(iiiif)", null0Import_draw_image_rotated)
   except WasmError:
     discard
   try:
