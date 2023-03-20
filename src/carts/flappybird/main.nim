@@ -29,6 +29,7 @@ type GameState = enum
 
 var state = STATE_INTRO
 var score:float = 0
+var landStart = 0
 
 proc load() {.null0.} =
   bird[0] = load_image("assets/bird0.png")
@@ -68,6 +69,7 @@ proc buttonDown(button: Button) {.null0.} =
     
     if state == STATE_PLAY:
       state = STATE_END
+      landStart = 0
       play_sound(hit)
       stop_sound(music2)
       return
@@ -86,22 +88,22 @@ proc update(dt: uint) {.null0.} =
   if state == STATE_INTRO:
     let s = sin(float (int(dt)/200))
     let f = int(int(dt) / 100) mod 3
-    draw_image(pipe_top , landx-50, -450)
+    draw_image(pipe_top , landx-50, -440)
     draw_image(pipe_bottom , landx-50, 160)
-    draw_image(bird[f], 150 , int(s * 30) + 100)
+    draw_image(bird[f], int(150), int(s * 30) + 100)
     draw_image(logo, 70, 80)
     draw_text(font_pixel_18x16, "IN NULL0", 90, 140)
 
   if state == STATE_PLAY:
     # fake score increment
-    score += int(dt)/200000
+    score += int(dt)/1000000
 
     let s = sin(float (int(dt)/200))
     let f = int(int(dt) / 100) mod 3
-    draw_image(pipe_top , landx-50, -450)
+    draw_image(pipe_top , landx-50, -440)
     draw_image(pipe_bottom , landx-50, 160)
-    draw_image(bird[f], 150 , int(s * 30) + 100)
-    draw_text(font_pixel_18x16, $int(score), 0, 0)
+    draw_image(bird[f], int(150), int(s * 30) + 100)
+    draw_text(font_pixel_18x16, $int(score), 10, 10)
   
   if state == STATE_END:
     draw_text(font_pixel_18x16, "YOU DIED", 90, 140)

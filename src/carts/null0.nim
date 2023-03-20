@@ -106,6 +106,14 @@ proc draw_image*(dst: uint8, src: uint8, posX: cint, posY: cint){.importc, cdecl
 proc draw_image*(src: uint8, posX: int, posY: int) =
   draw_image(uint8 0, src, cint posX, cint posY)
 
+proc draw_image_rotated*(dst: uint8, src: uint8, posX: cint, posY: cint, rotation: cfloat, offsetX: cfloat, offsetY: cfloat){.importc, cdecl.}
+proc draw_image_rotated*(src: uint8, posX: int, posY: int, rotation: float, offsetX: float, offsetY: float) =
+  draw_image_rotated(uint8 0, src, cint posX, cint posY, cfloat rotation, cfloat offsetX, cfloat offsetY)
+proc draw_image_rotated*(src: uint8, posX: int, posY: int, rotation: float, offset: float) =
+  draw_image_rotated(uint8 0, src, cint posX, cint posY, cfloat rotation, cfloat offset, cfloat offset)
+proc draw_image_rotated*(src: uint8, posX: int, posY: int, rotation: float) =
+  draw_image_rotated(uint8 0, src, cint posX, cint posY, cfloat rotation, cfloat 0.0, cfloat 0.0)
+
 proc draw_text*(dst: uint8, font: uint8, text: cstring, posX: cint, posY: cint){.importc, cdecl.}
 proc draw_text*(font: uint8, text: string, posX: int, posY: int) =
   draw_text(uint8 0, font, text, cint posX, cint posY)

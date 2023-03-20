@@ -219,6 +219,18 @@ proc null0Import_stop_sound(runtime: PRuntime; ctx: PImportContext; sp: ptr uint
   var sp = sp.stackPtrToUint()
   callHost(procImpl, sp, mem)
 
+proc null0Import_draw_image_rotated(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
+  proc procImpl(dst: uint8, src: uint8, posX: cint, posY: cint, rotation: cfloat, offsetX: cfloat, offsetY: cfloat) =
+    if not isNil(null0_images[dst]) and not isNil(null0_images[src]):
+      pntr.draw_image_rotated(null0_images[dst], null0_images[src], posX, posY, rotation, offsetX, offsetY, PNTR_FILTER_DEFAULT)
+      let err = pntr.get_error()
+      if not isNil(err):
+        echo "draw_image_rotated error: ", err
+  var sp = sp.stackPtrToUint()
+  callHost(procImpl, sp, mem)
+
+
+
 proc isZip*(bytes: string): bool =
   ## detect if some bytes (at least 4) are a zip file
   return ord(bytes[0]) == 0x50 and ord(bytes[1]) == 0x4B and ord(bytes[2]) == 0x03 and ord(bytes[3]) == 0x04
@@ -396,9 +408,10 @@ proc cartLoad*(file:FileData) =
     checkWasmRes m3_LinkRawFunction(module, "*", "set_sound_loop", "v(ii)", null0Import_set_sound_loop)
   except WasmError:
     discard
-
-
-
+  try:
+    checkWasmRes m3_LinkRawFunction(module, "*", "draw_image_rotated", "v(iiiiFFF)", null0Import_draw_image_rotated)
+  except WasmError:
+    discard
   try:
     checkWasmRes m3_CompileModule(module)
   except WasmError as e:
