@@ -91,9 +91,10 @@ proc update(dt: uint) {.null0.} =
   if state == STATE_INTRO:
     let s = sin(float (int(dt)/200))
     let f = int(int(dt) / 100) mod 3
-    draw_image(pipe_top , landx-50, -440)
+    let r = s * 45.0
+    draw_image(pipe_top , landx-50, -460)
     draw_image(pipe_bottom , landx-50, 160)
-    draw_image_rotated(bird[f], 150, int(s * 30) + 100, 45.0)
+    draw_image_rotated(bird[f], 150, int(s * 30) + 100, r)
     draw_image(logo, 70, 80)
     draw_text(font_pixel_18x16, center("NULL0", 19), 0, 140)
 
@@ -103,9 +104,10 @@ proc update(dt: uint) {.null0.} =
 
     let s = sin(float (int(dt)/200))
     let f = int(int(dt) / 100) mod 3
-    draw_image(pipe_top , landx-50, -440)
+    let r = s * 45.0
+    draw_image(pipe_top , landx-50, -460)
     draw_image(pipe_bottom , landx-50, 160)
-    draw_image_rotated(bird[f], 150, int(s * 30) + 100, 45.0)
+    draw_image_rotated(bird[f], 150, int(s * 30) + 100, r)
     draw_text(font_pixel_18x16, $int(score), 10, 10)
   
   if state == STATE_END:
