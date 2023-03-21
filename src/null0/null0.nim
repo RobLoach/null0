@@ -139,7 +139,7 @@ proc null0Import_image_copy(runtime: PRuntime; ctx: PImportContext; sp: ptr uint
 
 proc null0Import_image_scale(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc procImpl(destination: uint8, source: uint8, scaleX: cfloat, scaleY: cfloat) =
-    null0_images[destination] = pntr.image_scale(null0_images[source], scaleX, scaleY, PNTR_FILTER_DEFAULT)
+    null0_images[destination] = pntr.image_scale(null0_images[source], scaleX, scaleY, PNTR_FILTER_NEARESTNEIGHBOR)
     let err = pntr.get_error()
     if not isNil(err):
       echo "image_scale error: ", err
@@ -159,7 +159,7 @@ proc null0Import_load_image(runtime: PRuntime; ctx: PImportContext; sp: ptr uint
 proc null0Import_load_font_bmfont(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc procImpl(destination: uint8, filename: cstring, characters: cstring) =
     var f = physfs.read($filename)
-    null0_fonts[destination] = pntr.load_bmfont_from_memory(f.data, cuint f.length, characters)
+    null0_fonts[destination] = pntr.load_font_bmf_from_memory(f.data, cuint f.length, characters)
     let err = pntr.get_error()
     if not isNil(err):
       echo "load_font_bmfont error: ", err
@@ -169,7 +169,7 @@ proc null0Import_load_font_bmfont(runtime: PRuntime; ctx: PImportContext; sp: pt
 proc null0Import_load_font_ttyfont(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc procImpl(destination: uint8, filename: cstring, glyphWidth: cint, glyphHeight: cint, characters: cstring) =
     var f = physfs.read($filename)
-    null0_fonts[destination] = pntr.load_ttyfont_from_memory(f.data, cuint f.length, glyphWidth, glyphHeight, characters)
+    null0_fonts[destination] = pntr.load_font_tty_from_memory(f.data, cuint f.length, glyphWidth, glyphHeight, characters)
     let err = pntr.get_error()
     if not isNil(err):
       echo "load_font_ttyfont error: ", err
@@ -179,7 +179,7 @@ proc null0Import_load_font_ttyfont(runtime: PRuntime; ctx: PImportContext; sp: p
 proc null0Import_load_font_ttffont(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc procImpl(destination: uint8, filename: cstring, fontSize: cint, fontColor: pntr_color) =
     var f = physfs.read($filename)
-    null0_fonts[destination] = pntr.load_ttffont_from_memory(f.data, cuint f.length, fontSize, fontColor)
+    null0_fonts[destination] = pntr.load_font_ttf_from_memory(f.data, cuint f.length, fontSize, fontColor)
     let err = pntr.get_error()
     if not isNil(err):
       echo "load_font_ttffont error: ", err
@@ -222,7 +222,7 @@ proc null0Import_stop_sound(runtime: PRuntime; ctx: PImportContext; sp: ptr uint
 proc null0Import_draw_image_rotated(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc procImpl(dst: uint8, src: uint8, posX: cint, posY: cint, rotation: cfloat) =
     if not isNil(null0_images[dst]) and not isNil(null0_images[src]):
-      pntr.draw_image_rotated(null0_images[dst], null0_images[src], posX, posY, rotation/360.0,  float(null0_images[src].width)/2.0,  float(null0_images[src].height)/2.0, PNTR_FILTER_DEFAULT)
+      pntr.draw_image_rotated(null0_images[dst], null0_images[src], posX, posY, rotation/360.0,  float(null0_images[src].width)/2.0,  float(null0_images[src].height)/2.0, PNTR_FILTER_NEARESTNEIGHBOR)
       let err = pntr.get_error()
       if not isNil(err):
         echo "draw_image_rotated error: ", err
@@ -301,7 +301,7 @@ proc cartLoad*(file:FileData) =
     return
 
   null0_images[0] = new_image(320, 240)
-  null0_fonts[0] = load_default_font()
+  null0_fonts[0] = load_font_default()
 
   null0_sound = Soloud_create()
   discard Soloud_initEx(null0_sound, CLIP_ROUNDOFF, NULLDRIVER, SAMPLE_RATE, 0, 2)
