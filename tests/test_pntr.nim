@@ -2,6 +2,13 @@ import unittest
 import ../src/null0/pntr
 import ../src/null0/physfs
 
+suite "Pntr":
+  test "Error Handling":
+    let imageFail = pntr.load_image("fileNotFound.png")
+    check imageFail == nil
+    let err = pntr.get_error()
+    check len(err) > 5
+
 suite "Pntr: Gradients":
   test "horizontal":
     let canvas = pntr.gen_image_gradient_horizontal(320, 240, RED, BLUE)
