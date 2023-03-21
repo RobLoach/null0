@@ -150,18 +150,18 @@ proc image_resize_canvas*(image: ptr pntr_image; newWidth: cint; newHeight: cint
 proc image_rotate*(image: ptr pntr_image; rotation: cfloat; filter: pntr_filter): ptr pntr_image
 proc image_scale*(image: ptr pntr_image; scaleX: cfloat; scaleY: cfloat; filter: pntr_filter): ptr pntr_image
 proc image_to_pixelformat*(image: ptr pntr_image; dataSize: ptr cuint; pixelFormat: pntr_pixelformat): pointer
-proc load_bmfont*(fileName: cstring; characters: cstring): ptr pntr_font
-proc load_bmfont_from_image*(image: ptr pntr_image; characters: cstring): ptr pntr_font
-proc load_bmfont_from_memory*(fileData: pointer; dataSize: cuint; characters: cstring): ptr pntr_font
-proc load_default_font*(): ptr pntr_font
+proc load_font_bmf*(fileName: cstring; characters: cstring): ptr pntr_font
+proc load_font_bmf_from_image*(image: ptr pntr_image; characters: cstring): ptr pntr_font
+proc load_font_bmf_from_memory*(fileData: pointer; dataSize: cuint; characters: cstring): ptr pntr_font
+proc load_font_default*(): ptr pntr_font
 proc load_file*(fileName: cstring; bytesRead: ptr cuint): pointer
 proc load_image*(fileName: cstring): ptr pntr_image
 proc load_image_from_memory*(fileData: pointer; dataSize: cuint): ptr pntr_image
-proc load_ttffont*(fileName: cstring; fontSize: cint; fontColor: pntr_color): ptr pntr_font
-proc load_ttffont_from_memory*(fileData: pointer; dataSize: cuint; fontSize: cint; fontColor: pntr_color): ptr pntr_font
-proc load_ttyfont*(fileName: cstring; glyphWidth: cint; glyphHeight: cint; characters: cstring): ptr pntr_font
-proc load_ttyfont_from_image*(image: ptr pntr_image; glyphWidth: cint; glyphHeight: cint; characters: cstring): ptr pntr_font
-proc load_ttyfont_from_memory*(fileData: pointer; dataSize: cuint; glyphWidth: cint; glyphHeight: cint; characters: cstring): ptr pntr_font
+proc load_font_ttf*(fileName: cstring; fontSize: cint; fontColor: pntr_color): ptr pntr_font
+proc load_font_ttf_from_memory*(fileData: pointer; dataSize: cuint; fontSize: cint; fontColor: pntr_color): ptr pntr_font
+proc load_font_tty*(fileName: cstring; glyphWidth: cint; glyphHeight: cint; characters: cstring): ptr pntr_font
+proc load_font_tty_from_image*(image: ptr pntr_image; glyphWidth: cint; glyphHeight: cint; characters: cstring): ptr pntr_font
+proc load_font_tty_from_memory*(fileData: pointer; dataSize: cuint; glyphWidth: cint; glyphHeight: cint; characters: cstring): ptr pntr_font
 proc measure_text*(font: ptr pntr_font; text: cstring): cint
 proc measure_text_ex*(font: ptr pntr_font; text: cstring): pntr_vector
 proc new_color*(r: uint8; g: uint8; b: uint8; a: uint8): pntr_color
