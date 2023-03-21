@@ -85,8 +85,8 @@ proc buttonDown(button: Button) {.null0.} =
       return
 
 proc update(dt: uint) {.null0.} =
-  let landx = 336 - (int(int(dt)/10) mod 336)
   draw_image(sky, 0, 0)
+  let landx = 336 - (int(int(dt)/10) mod 336)
 
   if state == STATE_INTRO:
     let s = sin(float (int(dt)/200))

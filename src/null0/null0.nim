@@ -139,7 +139,7 @@ proc null0Import_image_copy(runtime: PRuntime; ctx: PImportContext; sp: ptr uint
 
 proc null0Import_image_scale(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc procImpl(destination: uint8, source: uint8, scaleX: cfloat, scaleY: cfloat) =
-    null0_images[destination] = pntr.image_scale(null0_images[source], scaleX, scaleY, PNTR_FILTER_DEFAULT)
+    null0_images[destination] = pntr.image_scale(null0_images[source], scaleX, scaleY, PNTR_FILTER_NEARESTNEIGHBOR)
     let err = pntr.get_error()
     if not isNil(err):
       echo "image_scale error: ", err
@@ -222,7 +222,7 @@ proc null0Import_stop_sound(runtime: PRuntime; ctx: PImportContext; sp: ptr uint
 proc null0Import_draw_image_rotated(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
   proc procImpl(dst: uint8, src: uint8, posX: cint, posY: cint, rotation: cfloat) =
     if not isNil(null0_images[dst]) and not isNil(null0_images[src]):
-      pntr.draw_image_rotated(null0_images[dst], null0_images[src], posX, posY, rotation/360.0,  float(null0_images[src].width)/2.0,  float(null0_images[src].height)/2.0, PNTR_FILTER_DEFAULT)
+      pntr.draw_image_rotated(null0_images[dst], null0_images[src], posX, posY, rotation/360.0,  float(null0_images[src].width)/2.0,  float(null0_images[src].height)/2.0, PNTR_FILTER_NEARESTNEIGHBOR)
       let err = pntr.get_error()
       if not isNil(err):
         echo "draw_image_rotated error: ", err
