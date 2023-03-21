@@ -17,7 +17,7 @@ suite "Pntr: Gradients":
 
 suite "Pntr: BM Fonts":
   test "from file":
-    let font = pntr.load_bmfont("./vendor/pntr/examples/resources/bmfont.png", " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/")
+    let font = pntr.load_font_bmf("./vendor/pntr/examples/resources/bmfont.png", " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/")
     defer: pntr.unload_font(font)
 
     let canvas = pntr.gen_image_color(320, 240, BLACK)
@@ -32,7 +32,7 @@ suite "Pntr: BM Fonts":
 
     check physfs.mount("fonts.null0", "", true)
     var b = physfs.read("/assets/bmfont.png")
-    let font = pntr.load_bmfont_from_memory(b.data, cuint b.length, " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/")
+    let font = pntr.load_font_bmf_from_memory(b.data, cuint b.length, " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/")
     defer: pntr.unload_font(font)
 
     let canvas = pntr.gen_image_color(320, 240, BLACK)
@@ -43,7 +43,7 @@ suite "Pntr: BM Fonts":
 
 suite "Pntr: TTF Fonts":
   test "from file":
-    let font = pntr.load_ttffont("./vendor/pntr/examples/resources/tuffy.ttf", 20, WHITE)
+    let font = pntr.load_font_ttf("./vendor/pntr/examples/resources/tuffy.ttf", 20, WHITE)
     defer: pntr.unload_font(font)
 
     let canvas = pntr.gen_image_color(320, 240, BLACK)
@@ -58,7 +58,7 @@ suite "Pntr: TTF Fonts":
 
     check mount("fonts.null0", "", true)
     var b = read("/assets/tuffy.ttf")
-    let font = load_ttffont_from_memory(b.data, cuint b.length, 20, WHITE)
+    let font = load_font_ttf_from_memory(b.data, cuint b.length, 20, WHITE)
     defer: pntr.unload_font(font)
 
     let canvas = gen_image_color(320, 240, BLACK)
